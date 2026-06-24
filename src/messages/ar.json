@@ -1,0 +1,5 @@
+{
+  "nav": { "collection": "المجموعة", "login": "تسجيل الدخول", "dashboard": "لوحة التحكم" },
+  "hero": { "slogan": "رمزك. قصتك.", "cta": "أنشئ Drippy الخاص بي", "discover": "عرض المجموعة" },
+  "common": { "save": "حفظ", "cancel": "إلغاء", "loading": "جاري التحميل...", "saved": "تم الحفظ", "error": "خطأ" }
+}

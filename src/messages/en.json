@@ -1,0 +1,5 @@
+{
+  "nav": { "collection": "Collection", "login": "Sign in", "dashboard": "Dashboard" },
+  "hero": { "slogan": "Your QR. Your Story.", "cta": "Create my Drippy", "discover": "View collection" },
+  "common": { "save": "Save", "cancel": "Cancel", "loading": "Loading...", "saved": "Saved", "error": "Error" }
+}

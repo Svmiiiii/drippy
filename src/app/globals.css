@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bebas+Neue&family=Anton&family=Bangers&family=Luckiest+Guy&family=Montserrat:wght@400;600;700&family=Poppins:wght@400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #7C3AED;
+  --color-secondary: #EC4899;
+  --color-accent: #22D3EE;
+  --radius-sm: 12px; --radius-md: 16px; --radius-lg: 24px;
+  --shadow-sm: 0 0 20px rgba(124,58,237,.25);
+  --shadow-md: 0 0 40px rgba(124,58,237,.35);
+  --shadow-lg: 0 0 80px rgba(124,58,237,.45);
+  --font-ui: 'Inter', sans-serif;
+  --font-heading: 'Bebas Neue', sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { padding: 0; margin: 0; }
+body {
+  background: #0B0F1A;
+  color: #fff;
+  font-family: var(--font-ui);
+  min-height: 100vh;
+}
+
+/* RTL support for Arabic (next-intl) */
+[dir='rtl'] { direction: rtl; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #131A2A; }
+::-webkit-scrollbar-thumb { background: #232B3D; border-radius: 3px; }
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-gradient-neon text-white font-semibold text-sm px-6 py-3 rounded-[16px] transition hover:shadow-glow-lg hover:-translate-y-px;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 border border-border text-white font-semibold text-sm px-6 py-3 rounded-[16px] transition hover:border-primary hover:bg-surface-hover;
+  }
+  .card { @apply bg-surface border border-border rounded-[24px] p-6; }
+  .input {
+    @apply w-full bg-surface border border-border text-white px-4 py-3 rounded-[16px] text-sm outline-none transition focus:border-primary placeholder:text-text-secondary;
+  }
+  .badge { @apply inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-semibold uppercase tracking-wide; }
+  .gradient-text { @apply bg-gradient-neon bg-clip-text text-transparent; }
+}

@@ -1,0 +1,51 @@
+{
+  "name": "drippy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Drippy — Your QR. Your Story. Streetwear Premium Digital (Algérie V1)",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:reset": "supabase db reset",
+    "db:push": "supabase db push",
+    "types:gen": "supabase gen types typescript --local > src/types/database.ts"
+  },
+  "dependencies": {
+    "next": "15.1.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "@supabase/ssr": "^0.5.1",
+    "zod": "^3.23.8",
+    "@tanstack/react-query": "^5.59.0",
+    "react-hook-form": "^7.53.0",
+    "@hookform/resolvers": "^3.9.0",
+    "recharts": "^2.12.7",
+    "framer-motion": "^11.5.0",
+    "next-intl": "^3.20.0",
+    "qr-code-styling": "^1.6.0",
+    "qrcode": "^1.5.4",
+    "lucide-react": "^0.445.0",
+    "resend": "^4.0.0",
+    "@react-email/components": "^0.0.25",
+    "pdf-lib": "^1.17.1",
+    "jszip": "^3.10.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^22.5.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/qrcode": "^1.5.5",
+    "tailwindcss": "^3.4.13",
+    "postcss": "^8.4.47",
+    "autoprefixer": "^10.4.20",
+    "supabase": "^1.200.0",
+    "eslint": "^9.11.0",
+    "eslint-config-next": "15.1.0"
+  }
+}
