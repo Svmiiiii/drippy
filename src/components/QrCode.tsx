@@ -26,7 +26,7 @@ export function QrCode({ value = 'https://drippy.dz', preset = 'NEON', text, tex
           type: 'rounded',
           gradient: {
             type: 'linear', rotation: 0.78,
-            colorStops: p.colors.map((c, i) => ({ offset: i / (p.colors.length - 1), color: c })),
+            colorStops: p.colors.map((c, i) => ({ offset: p.colors.length > 1 ? i / (p.colors.length - 1) : 0, color: c })),
           },
         },
         backgroundOptions: { color: 'transparent' },

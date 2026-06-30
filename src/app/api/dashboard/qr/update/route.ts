@@ -18,8 +18,10 @@ export async function POST(req: NextRequest) {
     if (qr.qr_status === 'disabled') return fail('QR_DISABLED', undefined, 403);
 
     const { error } = await supabase.from('qr_profiles')
-      .update({ target_type: parsed.data.target_type, target_value: parsed.data.target_value })
-      .eq('qr_code_id', qr.id);
+      .upsert(
+        { qr_code_id: qr.id, target_type: parsed.data.target_type, target_value: parsed.data.target_value },
+        { onConflict: 'qr_code_id' },
+      );
     if (error) return fail('INVALID_QR_TARGET', error.message, 400);
     return okEmpty();
   } catch (e) {

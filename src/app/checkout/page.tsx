@@ -10,7 +10,8 @@ import { formatDZD } from '@/lib/utils';
 function CheckoutInner() {
   const sp = useSearchParams();
   const router = useRouter();
-  const cfg = JSON.parse(decodeURIComponent(sp.get('cfg') ?? '{}'));
+  let cfg: Record<string, any> = {};
+  try { cfg = JSON.parse(decodeURIComponent(sp.get('cfg') ?? '{}')); } catch { /* invalid param */ }
 
   const [form, setForm] = useState({ name: '', phone: '', email: '', wilaya: '', commune: '', address: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});

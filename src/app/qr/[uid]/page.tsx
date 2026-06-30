@@ -11,13 +11,11 @@ export default async function QrScanPage({ params }: { params: Promise<{ uid: st
     .select('id, qr_status, profile_id, qr_profiles(target_type, target_value)')
     .eq('qr_uid', uid).single();
 
-  // record scan (fire and forget) — real impl posts to /api/qr/[uid]/scan from the client
-  if (qr) {
-    await admin.from('qr_scan_logs').insert({ qr_code_id: qr.id, scan_date: new Date().toISOString().slice(0, 10) }).then(() => {}, () => {});
-  }
-
   if (!qr) return <Fallback title="QR introuvable" message="Ce QR code n'existe pas." />;
   if (qr.qr_status === 'disabled') return <Fallback title="QR désactivé" message="Ce QR code est actuellement désactivé." />;
+
+  // record scan (fire and forget) — only for active QR codes
+  await admin.from('qr_scan_logs').insert({ qr_code_id: qr.id, scan_date: new Date().toISOString().slice(0, 10) }).then(() => {}, () => {});
 
   const dest = Array.isArray(qr.qr_profiles) ? qr.qr_profiles[0] : qr.qr_profiles;
   if (dest?.target_type === 'link') redirect(dest.target_value);

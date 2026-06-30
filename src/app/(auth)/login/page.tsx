@@ -12,17 +12,23 @@ export default function LoginPage() {
 
   async function handle() {
     setLoading(true); setError('');
-    const res = await fetch('/api/auth/login', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    const json = await res.json();
-    setLoading(false);
-    if (json.success) {
-      router.push(json.data.user?.role === 'customer' ? '/dashboard' : '/admin');
-      router.refresh();
-    } else {
-      setError(json.error?.message ?? 'Identifiants invalides');
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        const role = json.data.user?.role;
+        router.refresh();
+        router.push(role === 'customer' ? '/dashboard' : '/admin');
+      } else {
+        setError(json.error?.message ?? 'Identifiants invalides');
+      }
+    } catch {
+      setError('Erreur réseau, réessaie.');
+    } finally {
+      setLoading(false);
     }
   }
 

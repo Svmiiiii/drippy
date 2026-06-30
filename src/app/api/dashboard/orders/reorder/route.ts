@@ -27,25 +27,27 @@ export async function POST(req: NextRequest) {
     }
 
     const orderNumber = await nextOrderNumber();
-    const { data: order } = await admin.from('orders').insert({
+    const { data: order, error: orderError } = await admin.from('orders').insert({
       order_number: orderNumber, profile_id: profile!.id,
       customer_name: body.customer_name, customer_phone: body.customer_phone,
       customer_email: body.customer_email, wilaya_code: body.wilaya_code,
       commune: body.commune, address: body.address, total_dzd: total,
       status: 'pending_confirmation',
     }).select().single();
+    if (orderError || !order) return fail('VALIDATION_ERROR', orderError?.message, 500);
 
-    await admin.from('order_items').insert(body.items.map((i) => {
+    const { error: itemsError } = await admin.from('order_items').insert(body.items.map((i) => {
       const p = byId.get(i.product_id)!;
       return {
-        order_id: order!.id, product_id: i.product_id, product_name: p.name, size: 'M',
+        order_id: order.id, product_id: i.product_id, product_name: p.name, size: 'M',
         quantity: i.quantity, unit_price_dzd: p.price_dzd, qr_preset: i.qr_style.preset,
         text_enabled: i.text?.enabled ?? false, text_content: i.text?.content ?? null,
         text_position: i.text?.position ?? 'none',
       };
     }));
+    if (itemsError) return fail('VALIDATION_ERROR', itemsError.message, 500);
 
-    return ok({ order_id: order!.id, order_number: orderNumber, status: 'pending_confirmation' });
+    return ok({ order_id: order.id, order_number: orderNumber, status: 'pending_confirmation' });
   } catch (e) {
     if (e instanceof AuthError) return fail(e.code, undefined, 401);
     throw e;

@@ -11,8 +11,11 @@ function Inner() {
     fetch('/api/auth/verify-email', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: sp.get('token') ?? '' }),
-    }).then((r) => r.json()).then((j) => setStatus(j.success ? 'ok' : 'fail'));
-  }, [sp]);
+    })
+      .then((r) => r.json())
+      .then((j) => setStatus(j.success ? 'ok' : 'fail'))
+      .catch(() => setStatus('fail'));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="card mt-8">

@@ -17,25 +17,35 @@ export function OrdersTable({ orders }: { orders: any[] }) {
 
   async function confirm(id: string) {
     setBusy(true);
-    const res = await fetch(`/api/admin/orders/${id}/confirm`, { method: 'POST' });
-    const json = await res.json();
-    setBusy(false);
-    if (json.success) { setSel(null); setToast('Commande confirmée ! Compte + QR créés.'); router.refresh(); }
-    else setToast(json.error?.message ?? 'Erreur');
-    setTimeout(() => setToast(''), 3500);
+    try {
+      const res = await fetch(`/api/admin/orders/${id}/confirm`, { method: 'POST' });
+      const json = await res.json();
+      if (json.success) { setSel(null); setToast('Commande confirmée ! Compte + QR créés.'); router.refresh(); }
+      else setToast(json.error?.message ?? 'Erreur');
+    } catch {
+      setToast('Erreur réseau');
+    } finally {
+      setBusy(false);
+      setTimeout(() => setToast(''), 3500);
+    }
   }
 
   async function cancel(id: string) {
     setBusy(true);
-    const res = await fetch(`/api/admin/orders/${id}/cancel`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ reason: 'Refusée par admin' }),
-    });
-    const json = await res.json();
-    setBusy(false);
-    if (json.success) { setSel(null); setToast('Commande annulée.'); router.refresh(); }
-    else setToast(json.error?.message ?? 'Erreur');
-    setTimeout(() => setToast(''), 3500);
+    try {
+      const res = await fetch(`/api/admin/orders/${id}/cancel`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reason: 'Refusée par admin' }),
+      });
+      const json = await res.json();
+      if (json.success) { setSel(null); setToast('Commande annulée.'); router.refresh(); }
+      else setToast(json.error?.message ?? 'Erreur');
+    } catch {
+      setToast('Erreur réseau');
+    } finally {
+      setBusy(false);
+      setTimeout(() => setToast(''), 3500);
+    }
   }
 
   return (

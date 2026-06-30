@@ -19,8 +19,9 @@ export async function POST(req: NextRequest) {
     const { error } = await supabase.auth.updateUser({ email: parsed.data.new_email });
     if (error) return fail('EMAIL_ALREADY_USED', error.message, 409);
 
-    await supabase.from('profiles')
+    const { error: profileErr } = await supabase.from('profiles')
       .update({ email: parsed.data.new_email, email_verified: false }).eq('id', profile!.id);
+    if (profileErr) return fail('VALIDATION_ERROR', profileErr.message, 500);
     return okEmpty();
   } catch (e) {
     if (e instanceof AuthError) return fail(e.code, undefined, 401);

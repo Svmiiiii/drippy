@@ -29,6 +29,8 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
       p_order_id: id, p_auth_user_id: authUserId,
     });
     if (error) {
+      // Clean up the orphaned Supabase auth user if the DB transaction failed.
+      if (authUserId) await admin.auth.admin.deleteUser(authUserId).catch(() => {});
       if (error.message.includes('ALREADY_CONFIRMED')) return fail('ORDER_ALREADY_CONFIRMED', undefined, 409);
       if (error.message.includes('NOT_FOUND')) return fail('ORDER_NOT_FOUND', undefined, 404);
       return fail('PRODUCTION_FAILED', error.message, 500);

@@ -12,7 +12,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ uid
   const { data: qr } = await admin.from('qr_codes').select('id').eq('qr_uid', uid).single();
   if (!qr) return NextResponse.json({ error: { code: 'QR_NOT_FOUND' } }, { status: 404 });
 
-  const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown';
   const deviceHash = body.device_hash ?? createHash('sha256').update(`${ip}:${body.user_agent ?? ''}`).digest('hex');
   const ipHash = createHash('sha256').update(ip).digest('hex');
   const today = new Date().toISOString().slice(0, 10);

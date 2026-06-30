@@ -14,7 +14,8 @@ export async function POST(req: NextRequest) {
     });
     if (pwErr) return fail('INVALID_PASSWORD', undefined, 403);
 
-    await supabase.from('profiles').update({ phone: parsed.data.phone }).eq('id', profile!.id);
+    const { error } = await supabase.from('profiles').update({ phone: parsed.data.phone }).eq('id', profile!.id);
+    if (error) return fail('VALIDATION_ERROR', error.message, 500);
     return okEmpty();
   } catch (e) {
     if (e instanceof AuthError) return fail(e.code, undefined, 401);

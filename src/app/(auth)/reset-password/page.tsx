@@ -8,15 +8,23 @@ function Inner() {
   const router = useRouter();
   const [password, setPassword] = useState('');
   const [msg, setMsg] = useState('');
+  const [loading, setLoading] = useState(false);
 
   async function handle() {
-    const res = await fetch('/api/auth/reset-password', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: sp.get('token') ?? '', password }),
-    });
-    const json = await res.json();
-    if (json.success) { setMsg('Mot de passe réinitialisé !'); setTimeout(() => router.push('/login'), 1500); }
-    else setMsg(json.error?.message ?? 'Lien expiré');
+    setLoading(true);
+    try {
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: sp.get('token') ?? '', password }),
+      });
+      const json = await res.json();
+      if (json.success) { setMsg('Mot de passe réinitialisé !'); setTimeout(() => router.push('/login'), 1500); }
+      else setMsg(json.error?.message ?? 'Lien expiré');
+    } catch {
+      setMsg('Erreur réseau, réessaie.');
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -24,7 +32,7 @@ function Inner() {
       <label className="text-sm text-text-secondary mb-1.5 block text-left">Nouveau mot de passe</label>
       <input className="input mb-4" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Min. 12 caractères" />
       {msg && <p className="text-sm mb-4 text-accent">{msg}</p>}
-      <button onClick={handle} className="btn-primary w-full justify-center">Réinitialiser</button>
+      <button onClick={handle} disabled={loading} className="btn-primary w-full justify-center disabled:opacity-60">{loading ? '...' : 'Réinitialiser'}</button>
     </div>
   );
 }

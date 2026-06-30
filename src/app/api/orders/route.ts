@@ -51,7 +51,8 @@ export async function POST(req: NextRequest) {
       text_font: i.text?.font ?? null, text_color: i.text?.color ?? null, text_size: i.text?.size ?? null,
     };
   });
-  await admin.from('order_items').insert(items);
+  const { error: itemsError } = await admin.from('order_items').insert(items);
+  if (itemsError) return fail('VALIDATION_ERROR', itemsError.message, 500);
 
   // TODO: send "order received" email via Resend + add to admin queue.
   return ok({ order_id: order.id, order_number: orderNumber, status: 'pending_confirmation' });

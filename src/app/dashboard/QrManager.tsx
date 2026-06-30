@@ -14,14 +14,19 @@ export function QrManager({ qrUid, initialDest, history }: { qrUid: string; init
 
   async function save() {
     setSaving(true);
-    const res = await fetch('/api/dashboard/qr/update', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ target_type: type, target_value: value }),
-    });
-    const json = await res.json();
-    setSaving(false);
-    if (json.success) { setDest({ target_type: type, target_value: value }); setEditing(false); setToast('QR mis à jour !'); setTimeout(() => setToast(''), 3000); }
-    else setToast(json.error?.message ?? 'Erreur');
+    try {
+      const res = await fetch('/api/dashboard/qr/update', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ target_type: type, target_value: value }),
+      });
+      const json = await res.json();
+      if (json.success) { setDest({ target_type: type, target_value: value }); setEditing(false); setToast('QR mis à jour !'); setTimeout(() => setToast(''), 3000); }
+      else setToast(json.error?.message ?? 'Erreur');
+    } catch {
+      setToast('Erreur réseau');
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (

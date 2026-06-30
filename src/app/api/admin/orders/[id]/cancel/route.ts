@@ -16,7 +16,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     if (order.status !== 'pending_confirmation')
       return fail('ORDER_ALREADY_CONFIRMED', 'Cannot cancel a confirmed order', 409); // DRP-BUS-027
 
-    await supabase.from('orders').update({ status: 'cancelled', cancel_reason: parsed.data.reason }).eq('id', id);
+    const { error } = await supabase.from('orders').update({ status: 'cancelled', cancel_reason: parsed.data.reason }).eq('id', id);
+    if (error) return fail('VALIDATION_ERROR', error.message, 500);
     return okEmpty();
   } catch (e) {
     if (e instanceof AuthError) return fail(e.code, undefined, e.code === 'FORBIDDEN' ? 403 : 401);
