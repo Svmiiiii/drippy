@@ -36,7 +36,9 @@ export const verifyEmailSchema = z.object({ token: z.string().min(1) });
 export const orderItemSchema = z.object({
   product_id: z.string().uuid(),
   variant_id: z.string().uuid().optional(),
+  size: z.string().min(1),
   quantity: z.number().int().min(1).max(50),
+  garment_color: z.string().min(1).optional(),
   qr_style: z.object({
     preset: z.string(),
     color: z.string().optional(),
@@ -61,6 +63,7 @@ export const createOrderSchema = z.object({
   commune: z.string().min(1),
   address: z.string().min(1),
   items: z.array(orderItemSchema).min(1),
+  promo_code: z.string().min(1).optional(),
 });
 
 // ─── QR ─────────────────────────────────────────────────────────────────────
@@ -101,11 +104,38 @@ export const callLogSchema = z.object({
   result: z.enum(['answered', 'not_answered']),
   notes: z.string().optional(),
 });
+export const printAreaSchema = z.object({
+  top: z.number().min(0).max(100),
+  left: z.number().min(0).max(100),
+  width: z.number().min(5).max(80),
+});
+
+export const PRODUCT_CATEGORIES = ['tshirts', 'polos', 'hoodies_sweats', 'vestes', 'sacs_accessoires'] as const;
+
 export const upsertProductSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
   price_dzd: z.number().int().min(0),
   status: z.enum(['available', 'out_of_stock', 'archived']).default('available'),
+  images: z.array(z.string().url()).max(8).optional(),
+  sizes: z.array(z.string().min(1)).min(1).optional(),
+  print_area: printAreaSchema.optional(),
+  category: z.enum(PRODUCT_CATEGORIES).nullable().optional(),
+  colors: z.array(z.object({
+    name: z.string().min(1),
+    hex: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
+    image: z.string().url(),
+    available: z.boolean().default(true),
+  })).max(20).optional(),
+  dimensions_image: z.string().url().nullable().optional(),
+  characteristics_fr: z.string().max(2000).nullable().optional(),
+  // Per-size color availability — e.g. "Noir" sold out in size M but fine
+  // in L. Parallel to `sizes`; a size with no entry here has every color
+  // available.
+  size_color_availability: z.array(z.object({
+    size: z.string().min(1),
+    unavailable_colors: z.array(z.string()),
+  })).optional(),
 });
 
 // ─── PAGINATION ─────────────────────────────────────────────────────────────

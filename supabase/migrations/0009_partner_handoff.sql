@@ -1,0 +1,11 @@
+-- ============================================================================
+-- 0009 — external flocking partner handoff
+-- Printing/flocking is now outsourced: admin manually re-enters each
+-- confirmed order into the partner's own portal (no API access to it), then
+-- marks it as sent here. 'in_production' now means "at the partner, awaiting
+-- return"; when the finished garments come back, admin marks it 'packed'
+-- (ready for the existing shipping flow) — the intermediate 'printed' /
+-- 'flocked' statuses are no longer set individually since that work happens
+-- outside our system.
+-- ============================================================================
+alter table public.orders add column if not exists sent_to_partner_at timestamptz;

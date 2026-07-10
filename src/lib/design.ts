@@ -82,3 +82,43 @@ export const WILAYAS = [
   '50 - Bordj Badji Mokhtar','51 - Ouled Djellal','52 - Béni Abbès','53 - In Salah',
   '54 - In Guezzam','55 - Touggourt','56 - Djanet','57 - El M\'Ghair','58 - El Meniaa',
 ];
+
+// Frais de livraison par wilaya (DZD)
+// Alger + périphérie = 400, Nord = 500, Hauts plateaux = 600, Sud = 800
+export const SHIPPING_FEES: Record<string, number> = {
+  '16 - Alger': 400, '09 - Blida': 400, '35 - Boumerdès': 400, '42 - Tipaza': 400,
+  '02 - Chlef': 500, '06 - Béjaïa': 500, '10 - Bouira': 500, '13 - Tlemcen': 500,
+  '14 - Tiaret': 500, '15 - Tizi Ouzou': 500, '17 - Djelfa': 500, '18 - Jijel': 500,
+  '19 - Sétif': 500, '20 - Saïda': 500, '21 - Skikda': 500, '22 - Sidi Bel Abbès': 500,
+  '23 - Annaba': 500, '24 - Guelma': 500, '25 - Constantine': 500, '26 - Médéa': 500,
+  '27 - Mostaganem': 500, '28 - M\'Sila': 500, '29 - Mascara': 500, '31 - Oran': 500,
+  '34 - Bordj Bou Arréridj': 500, '36 - El Tarf': 500, '38 - Tissemsilt': 500,
+  '40 - Khenchela': 500, '41 - Souk Ahras': 500, '43 - Mila': 500, '44 - Aïn Defla': 500,
+  '45 - Naâma': 500, '46 - Aïn Témouchent': 500, '47 - Ghardaïa': 600, '48 - Relizane': 500,
+  '04 - Oum El Bouaghi': 500, '05 - Batna': 500,
+  '01 - Adrar': 800, '03 - Laghouat': 600, '07 - Biskra': 600, '08 - Béchar': 700,
+  '11 - Tamanrasset': 800, '12 - Tébessa': 600, '30 - Ouargla': 700,
+  '32 - El Bayadh': 700, '33 - Illizi': 800, '37 - Tindouf': 800, '39 - El Oued': 700,
+  '49 - Timimoun': 800, '50 - Bordj Badji Mokhtar': 800, '51 - Ouled Djellal': 700,
+  '52 - Béni Abbès': 800, '53 - In Salah': 800, '54 - In Guezzam': 800,
+  '55 - Touggourt': 700, '56 - Djanet': 800, '57 - El M\'Ghair': 700, '58 - El Meniaa': 700,
+};
+
+export function getShippingFee(wilaya: string): number {
+  return SHIPPING_FEES[wilaya] ?? 500;
+}
+
+// Garment sizes have no natural alphabetical order (L < M < S < XL < XS
+// lexicographically, which is nonsense for clothing) — always render size
+// lists through this instead of relying on whatever order the DB returns.
+export const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+export function sortSizes(sizes: string[]): string[] {
+  return [...sizes].sort((a, b) => {
+    const ia = SIZE_ORDER.indexOf(a);
+    const ib = SIZE_ORDER.indexOf(b);
+    if (ia === -1 && ib === -1) return a.localeCompare(b);
+    if (ia === -1) return 1;
+    if (ib === -1) return -1;
+    return ia - ib;
+  });
+}

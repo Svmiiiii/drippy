@@ -1,10 +1,12 @@
 'use client';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { useTranslations } from 'next-intl';
 
 export function StatsChart({ data }: { data: { date: string; scans: number }[] }) {
+  const t = useTranslations('dashboard');
   return (
     <div className="card">
-      <div className="font-bold mb-6">Évolution des scans — 7 jours</div>
+      <div className="font-bold mb-6">{t('scansEvolution')}</div>
       <ResponsiveContainer width="100%" height={240}>
         <LineChart data={data}>
           <XAxis dataKey="date" stroke="#A0AEC0" fontSize={11} tickFormatter={(d) => d.slice(5)} />

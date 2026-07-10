@@ -2,9 +2,11 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 function Inner() {
   const sp = useSearchParams();
+  const t = useTranslations('auth');
   const [status, setStatus] = useState<'pending' | 'ok' | 'fail'>('pending');
 
   useEffect(() => {
@@ -19,9 +21,9 @@ function Inner() {
 
   return (
     <div className="card mt-8">
-      {status === 'pending' && <p className="text-text-secondary">Vérification en cours...</p>}
-      {status === 'ok' && <><div className="text-5xl mb-4">✅</div><p>Email vérifié ! <Link href="/login" className="text-primary">Se connecter</Link></p></>}
-      {status === 'fail' && <><div className="text-5xl mb-4">⚠️</div><p className="text-text-secondary">Lien invalide ou expiré.</p></>}
+      {status === 'pending' && <p className="text-text-secondary">{t('verifying')}</p>}
+      {status === 'ok' && <><div className="text-5xl mb-4">✅</div><p>{t('emailVerified')} <Link href="/login" className="text-primary">{t('login')}</Link></p></>}
+      {status === 'fail' && <><div className="text-5xl mb-4">⚠️</div><p className="text-text-secondary">{t('invalidLink')}</p></>}
     </div>
   );
 }

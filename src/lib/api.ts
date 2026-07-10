@@ -32,6 +32,8 @@ export type ApiErrorCode =
   | 'PRODUCTION_FAILED' | 'PDF_GENERATION_FAILED' | 'ZIP_GENERATION_FAILED'
   // permissions
   | 'FORBIDDEN' | 'UNAUTHORIZED'
+  // abuse
+  | 'RATE_LIMITED'
   // generic
   | 'SERVICE_UNAVAILABLE';
 
@@ -55,6 +57,7 @@ const DEFAULT_MESSAGES: Partial<Record<ApiErrorCode, string>> = {
   ACCOUNT_NOT_ACTIVATED: 'Your account is not yet activated',
   FORBIDDEN: 'You do not have permission to perform this action',
   UNAUTHORIZED: 'Authentication required',
+  RATE_LIMITED: 'Too many requests, please try again later',
   SERVICE_UNAVAILABLE: 'Service temporarily unavailable',
 };
 

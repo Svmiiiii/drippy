@@ -1,10 +1,19 @@
 export type ApiResponse<T> = { success: true; data: T } | { success: false; error: { code: string; message: string } };
 
+export interface PrintArea { top: number; left: number; width: number; }
+
+export type ProductCategory = 'tshirts' | 'polos' | 'hoodies_sweats' | 'vestes' | 'sacs_accessoires';
+
+export interface ProductColor { name: string; hex: string; image: string; available: boolean; }
+
 export interface Product {
   id: string; slug: string; name: string; description: string | null;
   price_dzd: number; status: 'available' | 'out_of_stock' | 'archived';
-  badge: string | null; images: string[];
-  product_variants?: { id: string; size: string; available: boolean }[];
+  badge: string | null; images: string[]; print_area: PrintArea | null;
+  category: ProductCategory | null; colors: ProductColor[];
+  dimensions_image: string | null;
+  characteristics_fr: string | null; characteristics_en: string | null; characteristics_ar: string | null;
+  product_variants?: { id: string; size: string; available: boolean; unavailable_colors?: string[] }[];
 }
 
 export interface Profile {
