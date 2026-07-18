@@ -10,7 +10,11 @@ export async function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 bg-bg/80 backdrop-blur-xl border-b border-border">
-      <Link href="/" className="font-heading text-3xl tracking-widest gradient-text">DRIPPY</Link>
+      <Link href="/" className="flex items-center gap-2">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logos/icon-original.png" alt="" className="h-9 w-auto" />
+        <span className="font-heading text-3xl tracking-widest gradient-text">DRIPPY</span>
+      </Link>
       <div className="flex items-center gap-2">
         <Link href="/shop" className="px-4 py-2 text-sm text-text-secondary hover:text-white transition">{t('collection')}</Link>
         {profile ? (

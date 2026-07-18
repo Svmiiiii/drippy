@@ -16,6 +16,9 @@ const updateItemsSchema = z.object({
     text_position: z.enum(['above', 'below', 'none']),
     text_font: z.string().nullable(),
     text_color: z.string().nullable(),
+    text_size: z.number().int().min(60).max(130).nullable(),
+    logo_choice: z.enum(['badge', 'wordmark']).nullable(),
+    logo_position: z.enum(['center', 'top_left']).nullable(),
   })).min(1),
   removed_item_ids: z.array(z.string().uuid()).optional(),
 });
@@ -64,6 +67,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         text_position: hasText ? item.text_position : 'none',
         text_font: hasText ? item.text_font : null,
         text_color: hasText ? item.text_color : null,
+        text_size: hasText ? (item.text_size ?? 100) : null,
+        logo_choice: item.logo_choice,
+        logo_position: item.logo_position,
       }).eq('id', item.id);
       if (error) return fail('VALIDATION_ERROR', error.message, 500);
     }

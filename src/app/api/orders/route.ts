@@ -22,13 +22,18 @@ export async function POST(req: NextRequest) {
 
   // price + stock check
   const ids = body.items.map((i) => i.product_id);
-  const { data: products } = await admin.from('products').select('id, price_dzd, status, name').in('id', ids);
+  const { data: products } = await admin.from('products').select('id, price_dzd, status, name, category').in('id', ids);
   const byId = new Map((products ?? []).map((p) => [p.id, p]));
   let subtotal = 0;
   for (const item of body.items) {
     const p = byId.get(item.product_id);
     if (!p) return fail('PRODUCT_NOT_FOUND', undefined, 404);
     if (p.status === 'out_of_stock') return fail('PRODUCT_OUT_OF_STOCK', `${p.name} is out of stock`, 409);
+    // Position choice (center vs top-left) only makes sense on garments —
+    // for accessories the partner places the logo, so it's not collected.
+    if (p.category !== 'sacs_accessoires' && !item.logo.position) {
+      return fail('VALIDATION_ERROR', 'logo.position is required for this product category', 422);
+    }
     subtotal += p.price_dzd * item.quantity;
   }
 
@@ -91,6 +96,8 @@ export async function POST(req: NextRequest) {
       text_content: i.text?.content ?? null,
       text_position: i.text?.position ?? 'none',
       text_font: i.text?.font ?? null, text_color: i.text?.color ?? null, text_size: i.text?.size ?? null,
+      logo_choice: i.logo.choice,
+      logo_position: byId.get(i.product_id)!.category === 'sacs_accessoires' ? null : (i.logo.position ?? null),
     };
   });
   const { error: itemsError } = await admin.from('order_items').insert(items);

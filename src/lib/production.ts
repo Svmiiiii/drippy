@@ -2,6 +2,9 @@ import QRCode from 'qrcode';
 import { PDFDocument, rgb, StandardFonts, PDFFont } from 'pdf-lib';
 import JSZip from 'jszip';
 import sharp from 'sharp';
+import { parse as parseFont, Font } from 'opentype.js';
+import path from 'path';
+import { readFileSync } from 'fs';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { QR_PRESETS } from '@/lib/design';
 
@@ -9,6 +12,108 @@ const BUCKET = 'productions';
 const APP_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 const MODULE_PX = 12; // pixels per QR module
 const MARGIN_MODULES = 2;
+
+// The customer picks a font from QR_FONTS (design.ts) which is loaded
+// client-side via Google Fonts CSS. The server has none of those fonts
+// installed, so librsvg/fontconfig would silently fall back to a generic
+// sans-serif — the flocking image would then NOT match what the customer
+// saw and picked. We bundle the actual font files and rasterize glyph
+// outlines ourselves (via opentype.js) so the printed result is faithful
+// regardless of what's installed on the host (works the same on Vercel).
+const FONT_FILES: Record<string, string> = {
+  'Anton': 'Anton.ttf',
+  'Bebas Neue': 'BebasNeue.ttf',
+  'Montserrat': 'Montserrat.ttf',
+  'Poppins': 'Poppins.ttf',
+  'Bangers': 'Bangers.ttf',
+  'Luckiest Guy': 'LuckiestGuy.ttf',
+};
+const fontCache = new Map<string, Font>();
+
+function toArrayBuffer(buf: Buffer): ArrayBuffer {
+  return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer;
+}
+
+function loadFont(fontId?: string): Font {
+  const file = FONT_FILES[fontId ?? ''] ?? FONT_FILES['Anton'];
+  const cached = fontCache.get(file);
+  if (cached) return cached;
+  const font = parseFont(toArrayBuffer(readFileSync(path.join(process.cwd(), 'src/lib/fonts', file))));
+  fontCache.set(file, font);
+  return font;
+}
+
+// font.getPath(text, ...) runs opentype.js's full Bidi/GSUB text-shaping
+// pipeline, which throws on some fonts (e.g. Bangers) whose ccmp lookup
+// table uses a substitution format the library doesn't support — and that
+// pipeline always runs the ccmp step regardless of the `features` option.
+// A short custom text on a garment sticker doesn't need ligatures/kerning,
+// so glyphs are placed one at a time via straight cmap lookup instead.
+function textToGlyphPaths(font: Font, text: string, x: number, y: number, fontSize: number): { pathData: string; width: number } {
+  const scale = fontSize / font.unitsPerEm;
+  let cx = x;
+  const parts: string[] = [];
+  for (const ch of text) {
+    const glyph = font.charToGlyph(ch);
+    parts.push(glyph.getPath(cx, y, fontSize).toPathData(2));
+    cx += (glyph.advanceWidth ?? 0) * scale;
+  }
+  return { pathData: parts.join(' '), width: cx - x };
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Drippy brand logo (garment-face flocking) — recolored to match qr_preset
+// ──────────────────────────────────────────────────────────────────────────────
+
+// icon-mask.png / drippy-text-mask.png are white silhouettes on transparent
+// PNGs, extracted from the source artwork (no vector file was available).
+// Painting a gradient through either via 'dest-in' recolors it exactly like
+// the QR modules above, keeping the flocking file faithful to the live
+// preview (LogoPreview.tsx uses the same PNGs as CSS mask-images).
+const LOGO_ICON_MASK_PATH = path.join(process.cwd(), 'public/logos/icon-mask.png');
+const LOGO_TEXT_MASK_PATH = path.join(process.cwd(), 'public/logos/drippy-text-mask.png');
+
+async function recolorMask(maskPath: string, colors: string[]): Promise<Buffer> {
+  const meta = await sharp(maskPath).metadata();
+  const w = meta.width!;
+  const h = meta.height!;
+  const stops = colors.map((c, i) =>
+    `<stop offset="${colors.length > 1 ? i / (colors.length - 1) : 0}" stop-color="${c}"/>`
+  ).join('');
+  const gradientSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+    <defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="${w}" y2="${h}">${stops}</linearGradient></defs>
+    <rect width="${w}" height="${h}" fill="url(#g)"/>
+  </svg>`;
+  const gradientBuf = await sharp(Buffer.from(gradientSvg)).png().toBuffer();
+  return sharp(gradientBuf).composite([{ input: maskPath, blend: 'dest-in' }]).png().toBuffer();
+}
+
+async function generateLogoPng(choice: 'badge' | 'wordmark', colors: string[]): Promise<Buffer> {
+  const coloredIcon = await recolorMask(LOGO_ICON_MASK_PATH, colors);
+  if (choice === 'badge') return coloredIcon;
+
+  const iconMeta = await sharp(LOGO_ICON_MASK_PATH).metadata();
+  const iconW = iconMeta.width!;
+  const iconH = iconMeta.height!;
+
+  // "wordmark" variant: the recolored icon stacked above the "DRIPPY"
+  // wordmark, recolored with the same gradient for a consistent mark.
+  const coloredText = await recolorMask(LOGO_TEXT_MASK_PATH, colors);
+  const textMeta = await sharp(LOGO_TEXT_MASK_PATH).metadata();
+  const textW = textMeta.width!;
+  const textH = textMeta.height!;
+  const gap = Math.round(iconH * 0.06);
+  const totalW = Math.max(iconW, textW);
+  const totalH = iconH + gap + textH;
+
+  return sharp({ create: { width: totalW, height: totalH, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+    .composite([
+      { input: coloredIcon, left: Math.round((totalW - iconW) / 2), top: 0 },
+      { input: coloredText, left: Math.round((totalW - textW) / 2), top: iconH + gap },
+    ])
+    .png()
+    .toBuffer();
+}
 
 // ──────────────────────────────────────────────────────────────────────────────
 // SVG QR generator (server-side, no browser APIs)
@@ -20,6 +125,7 @@ interface ItemStyle {
   textPosition?: 'above' | 'below' | 'none';
   textFont?: string;
   textColor?: string;
+  textSize?: number; // percentage, 100 = default — matches QrCode.tsx's client-side scale
 }
 
 // Finder patterns (the 3 big "eyes") always sit at fixed 7x7 corners of any
@@ -35,8 +141,8 @@ function isFinderModule(row: number, col: number, size: number): boolean {
 // Client preview (QrCode.tsx / qr-code-styling) renders finder squares as a
 // single solid extra-rounded ring + center dot in colors[0], not gradient
 // dots. Replicated here with an SVG mask so production output matches.
-function finderPatternSvg(originCol: number, originRow: number, qrOffsetY: number, color: string, maskId: string): string {
-  const x = (originCol + MARGIN_MODULES) * MODULE_PX;
+function finderPatternSvg(originCol: number, originRow: number, qrOffsetY: number, color: string, maskId: string, qrOffsetX = 0): string {
+  const x = (originCol + MARGIN_MODULES) * MODULE_PX + qrOffsetX;
   const y = (originRow + MARGIN_MODULES) * MODULE_PX + qrOffsetY;
   const outer = MODULE_PX * 7;
   const mid = MODULE_PX * 5;
@@ -66,18 +172,39 @@ async function generateItemSvg(qrUrl: string, style: ItemStyle): Promise<string>
   const size = qrData.modules.size as number;
   const data = qrData.modules.data as Uint8Array;
 
-  const fontSize = Math.max(14, Math.round(MODULE_PX * 1.4));
+  const fontSize = Math.max(14, Math.round(MODULE_PX * 1.4 * ((style.textSize ?? 100) / 100)));
   const textGap = 8;
-  const textBlockH = style.text && style.textPosition !== 'none' ? fontSize + textGap * 2 : 0;
+  const hasText = !!style.text && style.textPosition !== 'none';
+  const textBlockH = hasText ? fontSize + textGap * 2 : 0;
 
   const qrPx = (size + MARGIN_MODULES * 2) * MODULE_PX;
-  const totalW = qrPx;
+
+  // Render the text as real glyph outlines (see loadFont) so the printed
+  // result matches the exact font the customer picked, rather than
+  // whatever fallback font the host happens to have installed. The
+  // canvas is widened past qrPx when the text is wider than the QR so
+  // long strings aren't clipped.
+  let textWidth = 0;
+  if (hasText) {
+    const font = loadFont(style.textFont);
+    textWidth = textToGlyphPaths(font, style.text!, 0, 0, fontSize).width;
+  }
+
+  const totalW = Math.max(qrPx, Math.ceil(textWidth) + 24);
   const totalH = qrPx + textBlockH;
+  const qrOffsetX = (totalW - qrPx) / 2;
 
   const qrOffsetY = style.textPosition === 'above' ? textBlockH : 0;
   const textY = style.textPosition === 'above'
     ? fontSize + textGap
     : qrPx + textGap + fontSize;
+
+  let textPathD = '';
+  if (hasText) {
+    const font = loadFont(style.textFont);
+    const dx = (totalW - textWidth) / 2;
+    textPathD = textToGlyphPaths(font, style.text!, dx, textY, fontSize).pathData;
+  }
 
   // Rounded dot radius
   const r = MODULE_PX * 0.38;
@@ -88,7 +215,7 @@ async function generateItemSvg(qrUrl: string, style: ItemStyle): Promise<string>
   for (let row = 0; row < size; row++) {
     for (let col = 0; col < size; col++) {
       if (data[row * size + col] && !isFinderModule(row, col, size)) {
-        const x = (col + MARGIN_MODULES) * MODULE_PX;
+        const x = (col + MARGIN_MODULES) * MODULE_PX + qrOffsetX;
         const y = (row + MARGIN_MODULES) * MODULE_PX + qrOffsetY;
         rects += `<rect x="${x}" y="${y}" width="${MODULE_PX}" height="${MODULE_PX}" rx="${r}" ry="${r}" fill="url(#g)"/>`;
       }
@@ -96,9 +223,9 @@ async function generateItemSvg(qrUrl: string, style: ItemStyle): Promise<string>
   }
 
   const finders = [
-    finderPatternSvg(0, 0, qrOffsetY, colors[0], 'fmask-0'),
-    finderPatternSvg(size - FINDER_SIZE, 0, qrOffsetY, colors[0], 'fmask-1'),
-    finderPatternSvg(0, size - FINDER_SIZE, qrOffsetY, colors[0], 'fmask-2'),
+    finderPatternSvg(0, 0, qrOffsetY, colors[0], 'fmask-0', qrOffsetX),
+    finderPatternSvg(size - FINDER_SIZE, 0, qrOffsetY, colors[0], 'fmask-1', qrOffsetX),
+    finderPatternSvg(0, size - FINDER_SIZE, qrOffsetY, colors[0], 'fmask-2', qrOffsetX),
   ].join('');
 
   // Gradient stops from preset colors
@@ -106,12 +233,8 @@ async function generateItemSvg(qrUrl: string, style: ItemStyle): Promise<string>
     `<stop offset="${colors.length > 1 ? i / (colors.length - 1) : 0}" stop-color="${c}"/>`
   ).join('');
 
-  const safeText = (style.text ?? '')
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  const textSvg = style.text && style.textPosition !== 'none'
-    ? `<text x="${totalW / 2}" y="${textY}" text-anchor="middle" dominant-baseline="auto"
-         font-family="${style.textFont ?? 'Arial'}, sans-serif" font-size="${fontSize}"
-         fill="${style.textColor ?? '#FFFFFF'}" font-weight="bold">${safeText}</text>`
+  const textSvg = hasText
+    ? `<path d="${textPathD}" fill="${style.textColor ?? '#FFFFFF'}"/>`
     : '';
 
   // gradientUnits="userSpaceOnUse" is the key fix: without it, SVG defaults
@@ -121,7 +244,7 @@ async function generateItemSvg(qrUrl: string, style: ItemStyle): Promise<string>
   // styling) always renders one shared gradient across the full canvas.
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalW} ${totalH}" width="${totalW}" height="${totalH}">
   <defs>
-    <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="${qrOffsetY}" x2="${qrPx}" y2="${qrOffsetY + qrPx}">${stops}</linearGradient>
+    <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="${qrOffsetX}" y1="${qrOffsetY}" x2="${qrOffsetX + qrPx}" y2="${qrOffsetY + qrPx}">${stops}</linearGradient>
   </defs>
   ${rects}
   ${finders}
@@ -240,8 +363,9 @@ async function generateProductionPdf(opts: {
   qrUrl: string;
   items: any[];
   itemPngs: Buffer[];
+  itemLogoPngs: (Buffer | null)[];
 }): Promise<Buffer> {
-  const { orderNumber, qrUid, qrUrl, items, itemPngs } = opts;
+  const { orderNumber, qrUid, qrUrl, items, itemPngs, itemLogoPngs } = opts;
   const doc = await PDFDocument.create();
   const fontBold = await doc.embedFont(StandardFonts.HelveticaBold);
   const fontReg = await doc.embedFont(StandardFonts.Helvetica);
@@ -291,6 +415,10 @@ async function generateProductionPdf(opts: {
       l(`Texte : "${item.text_content}"`, 11, fontReg, cyan);
       l(`Position : ${item.text_position ?? 'below'}   |   Police : ${item.text_font ?? 'Anton'}   |   Couleur : ${item.text_color ?? '#FFFFFF'}`, 10, fontReg, grey);
     }
+    if (item.logo_choice) {
+      const posLabel = item.logo_position === 'top_left' ? 'Haut gauche (cœur)' : item.logo_position === 'center' ? 'Centre' : 'Au choix du prestataire';
+      l(`Logo : ${item.logo_choice === 'wordmark' ? 'Avec texte' : 'Badge'}   |   Position : ${posLabel}`, 11, fontReg, cyan);
+    }
 
     // Print-ready image
     y -= 20;
@@ -299,9 +427,19 @@ async function generateProductionPdf(opts: {
     const imgSize = 200;
     page.drawImage(pngImg, { x: 50, y: y - imgSize, width: imgSize, height: imgSize });
 
-    // Checklist
+    const logoBuf = itemLogoPngs[i];
+    if (logoBuf) {
+      const logoImg = await doc.embedPng(logoBuf);
+      const logoDims = logoImg.scale(1);
+      const logoW = 110;
+      const logoH = logoW * (logoDims.height / logoDims.width);
+      page.drawText('Logo Drippy :', { x: 300, y: y, size: 10, font: fontBold, color: grey });
+      page.drawImage(logoImg, { x: 300, y: y - 20 - logoH, width: logoW, height: logoH });
+    }
+
+    // Checklist — placed below both the QR image and the (taller) logo image
     const checkX = 300;
-    let checkY = y - 10;
+    let checkY = y - 210;
     const check = (label: string) => {
       page.drawRectangle({ x: checkX, y: checkY - 12, width: 14, height: 14, borderColor: grey, borderWidth: 1 });
       page.drawText(label, { x: checkX + 20, y: checkY - 10, size: 11, font: fontReg, color: white });
@@ -334,6 +472,7 @@ export interface GenerationResult {
   qr_uid: string;
   qr_url: string;
   item_png_paths: string[];
+  item_logo_paths: (string | null)[];
 }
 
 export async function generateProductionFiles(
@@ -366,12 +505,15 @@ export async function generateProductionFiles(
       zip_path: `${base}/ORDER_PRODUCTION.zip`,
       qr_uid: qr.qr_uid, qr_url: qrUrl,
       item_png_paths: items.map((_, i) => `${base}/item_${i}.png`),
+      item_logo_paths: items.map((item, i) => (item.logo_choice ? `${base}/item_logo_${i}.png` : null)),
     };
   }
 
   // ── Per-item file generation ─────────────────────────────────────────────
   const itemSvgs: string[] = [];
   const itemPngs: Buffer[] = [];
+  const itemLogoPaths: (string | null)[] = [];
+  const itemLogoPngs: (Buffer | null)[] = [];
   const uploads: Promise<any>[] = [];
 
   await admin.storage.createBucket(BUCKET, { public: false }).catch(() => {});
@@ -384,6 +526,7 @@ export async function generateProductionFiles(
       textPosition: item.text_position ?? 'none',
       textFont: item.text_font ?? 'Anton',
       textColor: item.text_color ?? '#FFFFFF',
+      textSize: item.text_size ?? 100,
     };
 
     const svg = await generateItemSvg(qrUrl, style);
@@ -395,12 +538,26 @@ export async function generateProductionFiles(
       admin.storage.from(BUCKET).upload(`${base}/item_${i}.svg`, Buffer.from(svg, 'utf-8'), { contentType: 'image/svg+xml', upsert: true }),
       admin.storage.from(BUCKET).upload(`${base}/item_${i}.png`, png, { contentType: 'image/png', upsert: true }),
     );
+
+    if (item.logo_choice === 'badge' || item.logo_choice === 'wordmark') {
+      const presetColors = QR_PRESETS.find((p) => p.id === style.qrPreset)?.colors ?? QR_PRESETS[0].colors;
+      const logoPng = await generateLogoPng(item.logo_choice, [...presetColors]);
+      const logoPath = `${base}/item_logo_${i}.png`;
+      itemLogoPaths.push(logoPath);
+      itemLogoPngs.push(logoPng);
+      uploads.push(
+        admin.storage.from(BUCKET).upload(logoPath, logoPng, { contentType: 'image/png', upsert: true }),
+      );
+    } else {
+      itemLogoPaths.push(null);
+      itemLogoPngs.push(null);
+    }
   }
 
   // ── Production PDF ────────────────────────────────────────────────────────
   const productionPdf = await generateProductionPdf({
     orderNumber, qrUid: qr.qr_uid, qrUrl,
-    items, itemPngs,
+    items, itemPngs, itemLogoPngs,
   });
 
   uploads.push(
@@ -434,6 +591,7 @@ export async function generateProductionFiles(
     const itemNum = String(i + 1).padStart(2, '0');
     zip.file(`${orderNumber}_ITEM-${itemNum}.svg`, Buffer.from(itemSvgs[i], 'utf-8'));
     zip.file(`${orderNumber}_ITEM-${itemNum}.png`, itemPngs[i]);
+    if (itemLogoPngs[i]) zip.file(`${orderNumber}_ITEM-${itemNum}_LOGO.png`, itemLogoPngs[i]!);
   }
   zip.file(`${orderNumber}_PRODUCTION.pdf`, productionPdf);
   zip.file(`${orderNumber}_WELCOME.pdf`, welcomePdf);
@@ -462,6 +620,7 @@ export async function generateProductionFiles(
     qr_uid: qr.qr_uid,
     qr_url: qrUrl,
     item_png_paths: items.map((_, i) => `${base}/item_${i}.png`),
+    item_logo_paths: itemLogoPaths,
   };
 }
 

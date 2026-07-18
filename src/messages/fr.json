@@ -63,7 +63,12 @@
     "category_polos": "Polos",
     "category_hoodies_sweats": "Hoodies & Sweats",
     "category_vestes": "Vestes",
-    "category_sacs_accessoires": "Sacs & Accessoires"
+    "category_sacs_accessoires": "Sacs & Accessoires",
+    "allCollections": "Toutes les collections",
+    "collection_ete": "Collection Été",
+    "collection_automne": "Collection Automne",
+    "collection_hiver": "Collection Hiver",
+    "collection_printemps": "Collection Printemps"
   },
   "product": {
     "previewSubtitle": "Aperçu fidèle du rendu final",
@@ -78,12 +83,20 @@
     "textColor": "Couleur du texte",
     "customColor": "Couleur personnalisée",
     "font": "Police",
+    "textSize": "Taille du texte",
     "quantity": "Quantité",
     "total": "Total",
     "order": "Commander",
     "characteristics": "Caractéristiques",
     "dimensions": "Dimensions",
-    "outOfStock": "Rupture de stock"
+    "outOfStock": "Rupture de stock",
+    "logoChoice": "Logo Drippy",
+    "logoBadge": "Badge",
+    "logoWordmark": "Avec texte",
+    "logoPosition": "Position du logo",
+    "positionCenter": "Centre du t-shirt",
+    "positionTopLeft": "Haut à gauche (cœur)",
+    "logoPositionAccessoryHint": "Le prestataire positionnera le logo sur l'accessoire."
   },
   "checkout": {
     "finalizeOrder": "Finaliser la commande",
@@ -103,6 +116,8 @@
     "size": "Taille",
     "color": "Couleur",
     "style": "Style",
+    "logoPositionCenter": "Logo au centre",
+    "logoPositionTopLeft": "Logo en haut à gauche (cœur)",
     "subtotal": "Sous-total",
     "promoTotal": "Total",
     "shipping": "Livraison",
@@ -371,6 +386,7 @@
       "shipping": "Expédition",
       "analytics": "Analytics",
       "promos": "Codes promo",
+      "settings": "Paramètres",
       "admins": "Admins",
       "adminRole": "Admin",
       "superAdminRole": "Super Admin",
@@ -471,7 +487,13 @@
       "below": "En-dessous",
       "textColor": "Couleur du texte",
       "customColor": "Couleur personnalisée",
-      "font": "Police"
+      "font": "Police",
+      "textSize": "Taille",
+      "logoChoice": "Logo Drippy",
+      "logoBadge": "Badge",
+      "logoWordmark": "Avec texte",
+      "positionCenter": "Centre",
+      "positionTopLeft": "Haut gauche (cœur)"
     },
     "customers": {
       "title": "Clients",
@@ -485,13 +507,23 @@
       "enable": "Activer",
       "blockQr": "Bloquer QR",
       "unblockQr": "Débloquer QR",
-      "noCustomers": "Aucun client."
+      "noCustomers": "Aucun client.",
+      "view": "Voir",
+      "phone": "Téléphone",
+      "loading": "Chargement…",
+      "loadError": "Impossible de charger les détails du client.",
+      "currentDestination": "Destination actuelle",
+      "noQr": "Aucun QR généré pour ce client.",
+      "downloadWelcomePdf": "Fiche d'accueil (ID + mot de passe)",
+      "orders": "Commandes",
+      "noOrders": "Aucune commande."
     },
     "products": {
       "title": "Produits",
       "newProduct": "+ Nouveau produit",
       "colProduct": "Produit",
       "colCategory": "Catégorie",
+      "colCollection": "Collection",
       "colPrice": "Prix",
       "colStock": "Stock",
       "colActions": "Actions",
@@ -534,6 +566,12 @@
       "category_hoodies_sweats": "Hoodies & Sweats",
       "category_vestes": "Vestes",
       "category_sacs_accessoires": "Sacs & Accessoires",
+      "collection": "Collection",
+      "noCollection": "Aucune collection",
+      "collection_ete": "Été",
+      "collection_automne": "Automne",
+      "collection_hiver": "Hiver",
+      "collection_printemps": "Printemps",
       "colors": "Couleurs disponibles",
       "colorsHint": "Chaque couleur a sa propre photo — le client verra le rendu du QR sur la bonne photo selon la couleur choisie.",
       "colorNamePlaceholder": "Nom de la couleur (ex : Noir)",
@@ -651,6 +689,18 @@
       "enable": "Activer",
       "noPromos": "Aucun code promo."
     },
+    "settings": {
+      "title": "Paramètres du site",
+      "subtitle": "Textes affichés sur le site, modifiables sans intervention technique.",
+      "heroScanText": "Texte sous le QR (page d'accueil)",
+      "heroScanTextHint": "Traduit automatiquement en anglais et arabe à l'enregistrement.",
+      "heroScanTextPlaceholder": "Scan me for a date 😏",
+      "loading": "Chargement…",
+      "saving": "Enregistrement...",
+      "save": "Enregistrer",
+      "saved": "Enregistré !",
+      "error": "Erreur"
+    },
     "partner": {
       "title": "Production & Partenaire",
       "subtitle": "Ressaisis chaque commande dans le portail du partenaire flocage, puis marque-la comme envoyée.",
@@ -686,7 +736,13 @@
       "downloadClientCard": "Fiche client (ID + mot de passe)",
       "total": "Montant à encaisser",
       "sameQrNote": "Un seul QR code pour toute la commande (à utiliser pour chaque article ci-dessous)",
-      "flockImageLabel": "Image à floquer (QR + texte)"
+      "flockImageLabel": "Image à floquer (QR + texte)",
+      "logoLabel": "Logo :",
+      "logoBadge": "Badge",
+      "logoWordmark": "Avec texte",
+      "logoPositionCenter": "Centre",
+      "logoPositionTopLeft": "Haut gauche (cœur)",
+      "logoPositionPartnerChoice": "position au choix du partenaire"
     },
     "admins": {
       "title": "Administrateurs",

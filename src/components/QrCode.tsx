@@ -9,11 +9,17 @@ interface Props {
   textPosition?: 'above' | 'below' | 'none';
   font?: string;
   textColor?: string;
+  textSize?: number;
   size?: number;
 }
 
+// Base text size at the default 100% scale — matches the print-side default
+// in production.ts (see the comment there) so growing/shrinking the text
+// looks the same on screen as on the final flocked garment.
+const BASE_TEXT_PX = 14;
+
 // Renders a styled QR using qr-code-styling, with optional text above/below.
-export function QrCode({ value = 'https://drippy.dz', preset = 'NEON', text, textPosition = 'none', font = 'Anton', textColor = '#FFFFFF', size = 160 }: Props) {
+export function QrCode({ value = 'https://drippy.dz', preset = 'NEON', text, textPosition = 'none', font = 'Anton', textColor = '#FFFFFF', textSize = 100, size = 160 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const p = QR_PRESETS.find((x) => x.id === preset) ?? QR_PRESETS[3];
 
@@ -40,11 +46,11 @@ export function QrCode({ value = 'https://drippy.dz', preset = 'NEON', text, tex
   return (
     <div className="flex flex-col items-center gap-2">
       {text && textPosition === 'above' && (
-        <div style={{ fontFamily: font, maxWidth: size, color: textColor }} className="text-center text-sm break-words">{text}</div>
+        <div style={{ fontFamily: font, maxWidth: size, color: textColor, fontSize: BASE_TEXT_PX * (textSize / 100) }} className="text-center break-words">{text}</div>
       )}
       <div ref={ref} style={{ width: size, height: size }} className="rounded-2xl overflow-hidden" />
       {text && textPosition === 'below' && (
-        <div style={{ fontFamily: font, maxWidth: size, color: textColor }} className="text-center text-sm break-words">{text}</div>
+        <div style={{ fontFamily: font, maxWidth: size, color: textColor, fontSize: BASE_TEXT_PX * (textSize / 100) }} className="text-center break-words">{text}</div>
       )}
     </div>
   );

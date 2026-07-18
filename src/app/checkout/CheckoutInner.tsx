@@ -3,7 +3,8 @@ import { useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { QrCode } from '@/components/QrCode';
-import { WILAYAS, getShippingFee } from '@/lib/design';
+import { LogoPreview } from '@/components/LogoPreview';
+import { WILAYAS, getShippingFee, QR_PRESETS } from '@/lib/design';
 import { formatDZD } from '@/lib/utils';
 
 function CheckoutForm() {
@@ -65,6 +66,7 @@ function CheckoutForm() {
             garment_color: cfg.garment_color,
             qr_style: { preset: cfg.preset },
             text: cfg.text,
+            logo: cfg.logo,
           }],
           ...(promoApplied ? { promo_code: promoApplied.code } : {}),
         }),
@@ -126,10 +128,14 @@ function CheckoutForm() {
 
       <div className="card mt-8 mb-6">
         <div className="flex items-center gap-4 mb-4">
-          <QrCode preset={cfg.preset} size={72} text={cfg.text?.content} textPosition={cfg.text?.position} font={cfg.text?.font} />
+          <QrCode preset={cfg.preset} size={72} text={cfg.text?.content} textPosition={cfg.text?.position} font={cfg.text?.font} textColor={cfg.text?.color} textSize={cfg.text?.size} />
+          {cfg.logo?.choice && (
+            <LogoPreview variant={cfg.logo.choice} colors={QR_PRESETS.find((p) => p.id === cfg.preset)?.colors ?? QR_PRESETS[0].colors} size={48} />
+          )}
           <div>
             <div className="font-bold">{cfg.name}</div>
             <div className="text-text-secondary text-sm mt-1">{t('size')} {cfg.size}{cfg.garment_color ? ` · ${t('color')} ${cfg.garment_color}` : ''} · {cfg.qty}× · {t('style')} {cfg.preset}</div>
+            {cfg.logo?.position && <div className="text-text-secondary text-sm">{cfg.logo.position === 'center' ? t('logoPositionCenter') : t('logoPositionTopLeft')}</div>}
           </div>
         </div>
         <div className="border-t border-border pt-4 space-y-2">

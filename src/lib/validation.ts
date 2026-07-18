@@ -50,9 +50,17 @@ export const orderItemSchema = z.object({
       position: z.enum(['above', 'below', 'none']).default('none'),
       font: z.string().optional(),
       color: z.string().optional(),
-      size: z.number().int().optional(),
+      size: z.number().int().min(60).max(130).optional(),
     })
     .optional(),
+  // Drippy brand logo flocked on the garment face, recolored to match
+  // qr_style. Position is required except for accessories, where the
+  // partner places it — enforced in /api/orders since category lives on
+  // the product, not the item.
+  logo: z.object({
+    choice: z.enum(['badge', 'wordmark']),
+    position: z.enum(['center', 'top_left']).optional(),
+  }),
 });
 
 export const createOrderSchema = z.object({
@@ -111,6 +119,7 @@ export const printAreaSchema = z.object({
 });
 
 export const PRODUCT_CATEGORIES = ['tshirts', 'polos', 'hoodies_sweats', 'vestes', 'sacs_accessoires'] as const;
+export const PRODUCT_COLLECTIONS = ['ete', 'automne', 'hiver', 'printemps'] as const;
 
 export const upsertProductSchema = z.object({
   name: z.string().min(1),
@@ -121,6 +130,7 @@ export const upsertProductSchema = z.object({
   sizes: z.array(z.string().min(1)).min(1).optional(),
   print_area: printAreaSchema.optional(),
   category: z.enum(PRODUCT_CATEGORIES).nullable().optional(),
+  collection: z.enum(PRODUCT_COLLECTIONS).nullable().optional(),
   colors: z.array(z.object({
     name: z.string().min(1),
     hex: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
@@ -136,6 +146,11 @@ export const upsertProductSchema = z.object({
     size: z.string().min(1),
     unavailable_colors: z.array(z.string()),
   })).optional(),
+});
+
+// ─── SITE SETTINGS ──────────────────────────────────────────────────────────
+export const siteSettingsSchema = z.object({
+  hero_scan_text_fr: z.string().min(1).max(80),
 });
 
 // ─── PAGINATION ─────────────────────────────────────────────────────────────

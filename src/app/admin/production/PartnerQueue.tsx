@@ -12,6 +12,8 @@ interface OrderItem {
   garment_color: string | null;
   qr_preset: string;
   text_content: string | null;
+  logo_choice: 'badge' | 'wordmark' | null;
+  logo_position: 'center' | 'top_left' | null;
 }
 
 interface Order {
@@ -31,6 +33,7 @@ interface Order {
 
 function useOrderAssets(orderId: string, enabled: boolean) {
   const [images, setImages] = useState<string[] | null>(null);
+  const [logoImages, setLogoImages] = useState<(string | null)[] | null>(null);
   const [welcomePdfUrl, setWelcomePdfUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -39,11 +42,11 @@ function useOrderAssets(orderId: string, enabled: boolean) {
     setLoading(true);
     fetch(`/api/admin/production/${orderId}/assets`)
       .then((r) => r.json())
-      .then((j) => { if (j.success) { setImages(j.data.item_image_urls); setWelcomePdfUrl(j.data.welcome_pdf_url); } })
+      .then((j) => { if (j.success) { setImages(j.data.item_image_urls); setLogoImages(j.data.item_logo_urls); setWelcomePdfUrl(j.data.welcome_pdf_url); } })
       .finally(() => setLoading(false));
   }, [orderId, enabled, images]);
 
-  return { images, welcomePdfUrl, loading };
+  return { images, logoImages, welcomePdfUrl, loading };
 }
 
 function OrderCard({ order, mode, onAction, busy }: {
@@ -54,7 +57,7 @@ function OrderCard({ order, mode, onAction, busy }: {
 }) {
   const t = useTranslations('admin.partner');
   const locale = useLocale();
-  const { images, welcomePdfUrl, loading: imagesLoading } = useOrderAssets(order.id, true);
+  const { images, logoImages, welcomePdfUrl, loading: imagesLoading } = useOrderAssets(order.id, true);
   const [copied, setCopied] = useState(false);
 
   const firstItem = order.order_items[0];
@@ -134,14 +137,34 @@ function OrderCard({ order, mode, onAction, busy }: {
             </a>
           )}
         </div>
-        {order.order_items.map((it) => (
-          <div key={it.id} className="flex items-center gap-4">
-            <div className="flex-1 min-w-0">
-              <div className="font-semibold text-sm">{it.product_name}</div>
-              <div className="text-text-secondary text-xs mt-0.5">{t('size')} {it.size}{it.garment_color ? ` · ${t('color')} ${it.garment_color}` : ''} · {t('qty')} {it.quantity}</div>
+        {order.order_items.map((it, idx) => {
+          const logoUrl = logoImages?.[idx];
+          return (
+            <div key={it.id} className="flex items-center gap-4">
+              {it.logo_choice && (
+                <div className="w-14 h-14 rounded-lg bg-[repeating-conic-gradient(#2a2f3a_0%_25%,transparent_0%_50%)] bg-[length:10px_10px] border border-border flex items-center justify-center overflow-hidden shrink-0">
+                  {logoUrl ? <img src={logoUrl} alt="" className="w-full h-full object-contain" /> : <span className="text-[9px] text-text-secondary">{t('loadingImage')}</span>}
+                </div>
+              )}
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-sm">{it.product_name}</div>
+                <div className="text-text-secondary text-xs mt-0.5">{t('size')} {it.size}{it.garment_color ? ` · ${t('color')} ${it.garment_color}` : ''} · {t('qty')} {it.quantity}</div>
+                {it.logo_choice && (
+                  <div className="text-secondary text-xs mt-0.5">
+                    {t('logoLabel')} {it.logo_choice === 'wordmark' ? t('logoWordmark') : t('logoBadge')}
+                    {it.logo_position && ` · ${it.logo_position === 'top_left' ? t('logoPositionTopLeft') : t('logoPositionCenter')}`}
+                    {!it.logo_position && ` · ${t('logoPositionPartnerChoice')}`}
+                  </div>
+                )}
+              </div>
+              {it.logo_choice && logoUrl && (
+                <a href={logoUrl} download className="text-xs px-2 py-1 rounded border border-border text-text-secondary hover:text-white transition shrink-0">
+                  {t('downloadImage')}
+                </a>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="flex gap-3 flex-wrap">

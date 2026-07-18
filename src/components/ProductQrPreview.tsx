@@ -11,7 +11,7 @@ export const DEFAULT_PRINT_AREA: PrintArea = { top: 35, left: 50, width: 30 };
 // editor (click to reposition) and the customer-facing customizer (read-only,
 // true WYSIWYG of what gets printed).
 export function ProductQrPreview({
-  imageUrl, printArea, preset = 'NEON', text, textPosition = 'none', font = 'Anton', textColor = '#FFFFFF',
+  imageUrl, printArea, preset = 'NEON', text, textPosition = 'none', font = 'Anton', textColor = '#FFFFFF', textSize = 100,
   onPrintAreaChange, editable = false,
 }: {
   imageUrl: string | null;
@@ -21,6 +21,7 @@ export function ProductQrPreview({
   textPosition?: 'above' | 'below' | 'none';
   font?: string;
   textColor?: string;
+  textSize?: number;
   onPrintAreaChange?: (area: PrintArea) => void;
   editable?: boolean;
 }) {
@@ -63,7 +64,7 @@ export function ProductQrPreview({
         className="absolute pointer-events-none"
         style={{ left: `${printArea.left}%`, top: `${printArea.top}%`, transform: 'translate(-50%, -50%)' }}
       >
-        <QrCode preset={preset} text={text} textPosition={textPosition} font={font} textColor={textColor} size={qrSize} />
+        <QrCode preset={preset} text={text} textPosition={textPosition} font={font} textColor={textColor} textSize={textSize} size={qrSize} />
       </div>
       {editable && (
         <div className="absolute bottom-2 start-1/2 -translate-x-1/2 text-[10px] bg-black/60 text-white px-2.5 py-1 rounded-full pointer-events-none whitespace-nowrap">

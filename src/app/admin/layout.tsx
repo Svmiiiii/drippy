@@ -19,6 +19,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { href: '/admin/shipping', label: t('shipping'), icon: '🚚' },
     { href: '/admin/analytics', label: t('analytics'), icon: '📈' },
     { href: '/admin/promos', label: t('promos'), icon: '🎟' },
+    { href: '/admin/settings', label: t('settings'), icon: '⚙️' },
     ...(profile.role === 'super_admin' ? [{ href: '/admin/admins', label: t('admins'), icon: '🔑' }] : []),
   ];
 

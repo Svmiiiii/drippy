@@ -3,8 +3,10 @@ import { getTranslations } from 'next-intl/server';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { QrCode } from '@/components/QrCode';
+import { LogoPreview } from '@/components/LogoPreview';
 import { QR_PRESETS } from '@/lib/design';
 import { createClient } from '@/lib/supabase/server';
+import { getUserLocale } from '@/lib/i18n';
 import { formatDZD } from '@/lib/utils';
 import type { Product } from '@/types';
 
@@ -14,6 +16,15 @@ export default async function HomePage() {
   const { data: products } = await supabase
     .from('products').select('*').neq('status', 'archived').limit(3);
   const t = await getTranslations();
+  const locale = await getUserLocale();
+
+  // Admin-editable QR caption (see /admin/settings) — falls back to the
+  // i18n default if the settings row is somehow missing or untranslated.
+  const { data: settings } = await supabase.from('site_settings').select('*').eq('id', 1).single();
+  const heroScanText = (locale === 'en' ? settings?.hero_scan_text_en
+    : locale === 'ar' ? settings?.hero_scan_text_ar
+    : settings?.hero_scan_text_fr) || t('hero.scanExample');
+  const neonColors = QR_PRESETS.find((p) => p.id === 'NEON')!.colors;
 
   const steps = [
     { s: '01', i: '🛒', t: t('home.step1Title'), d: t('home.step1Desc') },
@@ -49,8 +60,8 @@ export default async function HomePage() {
           <div className="flex justify-center">
             <div className="relative">
               <div className="w-80 h-[420px] bg-surface border border-border rounded-[32px] flex flex-col items-center justify-center gap-6 shadow-glow-lg">
-                <div className="text-6xl">👕</div>
-                <QrCode preset="NEON" size={160} text={t('hero.scanExample')} textPosition="below" />
+                <LogoPreview variant="badge" colors={neonColors} size={80} />
+                <QrCode preset="NEON" size={160} text={heroScanText} textPosition="below" />
               </div>
               <div className="absolute -top-5 -end-5 bg-gradient-neon rounded-2xl px-4 py-2.5 text-xs font-bold">{t('hero.poweredBy')}</div>
             </div>

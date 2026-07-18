@@ -3,8 +3,8 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { formatDZD } from '@/lib/utils';
-import { PRODUCT_CATEGORIES } from '@/lib/validation';
-import type { Product, ProductCategory } from '@/types';
+import { PRODUCT_CATEGORIES, PRODUCT_COLLECTIONS } from '@/lib/validation';
+import type { Product, ProductCategory, ProductCollection } from '@/types';
 
 export function ShopClient({ products }: { products: Product[] }) {
   const t = useTranslations('shop');
@@ -12,6 +12,7 @@ export function ShopClient({ products }: { products: Product[] }) {
   const [showAvailable, setShowAvailable] = useState(false);
   const [sort, setSort] = useState('newest');
   const [category, setCategory] = useState<ProductCategory | 'all'>('all');
+  const [collection, setCollection] = useState<ProductCollection | 'all'>('all');
 
   const SORTS = [
     { value: 'newest', label: t('sortNewest') },
@@ -25,16 +26,22 @@ export function ShopClient({ products }: { products: Product[] }) {
     [products],
   );
 
+  const collectionsInUse = useMemo(
+    () => PRODUCT_COLLECTIONS.filter((c) => products.some((p) => p.collection === c)),
+    [products],
+  );
+
   const filtered = useMemo(() => {
     let list = [...products];
     if (category !== 'all') list = list.filter((p) => p.category === category);
+    if (collection !== 'all') list = list.filter((p) => p.collection === collection);
     if (search.trim()) list = list.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()) || (p.description ?? '').toLowerCase().includes(search.toLowerCase()));
     if (showAvailable) list = list.filter((p) => p.status === 'available');
     if (sort === 'price_asc') list.sort((a, b) => a.price_dzd - b.price_dzd);
     else if (sort === 'price_desc') list.sort((a, b) => b.price_dzd - a.price_dzd);
     else if (sort === 'name') list.sort((a, b) => a.name.localeCompare(b.name));
     return list;
-  }, [products, category, search, showAvailable, sort]);
+  }, [products, category, collection, search, showAvailable, sort]);
 
   return (
     <>
@@ -49,6 +56,22 @@ export function ShopClient({ products }: { products: Product[] }) {
             <button key={c} onClick={() => setCategory(c)}
               className={`px-3.5 py-1.5 rounded-full text-sm font-semibold border transition ${category === c ? 'border-secondary bg-secondary/15 text-white' : 'border-border text-text-secondary hover:text-white'}`}>
               {t(`category_${c}`)}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Collections */}
+      {collectionsInUse.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-5">
+          <button onClick={() => setCollection('all')}
+            className={`px-3.5 py-1.5 rounded-full text-sm font-semibold border transition ${collection === 'all' ? 'border-secondary bg-secondary/15 text-white' : 'border-border text-text-secondary hover:text-white'}`}>
+            {t('allCollections')}
+          </button>
+          {collectionsInUse.map((c) => (
+            <button key={c} onClick={() => setCollection(c)}
+              className={`px-3.5 py-1.5 rounded-full text-sm font-semibold border transition ${collection === c ? 'border-secondary bg-secondary/15 text-white' : 'border-border text-text-secondary hover:text-white'}`}>
+              {t(`collection_${c}`)}
             </button>
           ))}
         </div>

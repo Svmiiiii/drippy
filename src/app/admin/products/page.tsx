@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { formatDZD } from '@/lib/utils';
 import { ProductQrPreview, DEFAULT_PRINT_AREA } from '@/components/ProductQrPreview';
-import { PRODUCT_CATEGORIES } from '@/lib/validation';
+import { PRODUCT_CATEGORIES, PRODUCT_COLLECTIONS } from '@/lib/validation';
 import { sortSizes } from '@/lib/design';
 import type { PrintArea } from '@/types';
 
@@ -20,6 +20,7 @@ function ProductModal({ product, onClose }: { product?: any; onClose: () => void
     price_dzd: product ? String(product.price_dzd) : '',
     status: product?.status ?? 'available',
     category: product?.category ?? '',
+    collection: product?.collection ?? '',
   });
 
   const existingSizes: string[] = sortSizes(product?.product_variants?.map((v: any) => v.size) ?? []);
@@ -159,7 +160,7 @@ function ProductModal({ product, onClose }: { product?: any; onClose: () => void
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: form.name, description: form.description || undefined, price_dzd: price, status: form.status,
-          category: form.category || null, colors,
+          category: form.category || null, collection: form.collection || null, colors,
           images, sizes: sizeType === 'unique' ? ['Unique'] : sizes,
           ...(images.length > 0 || colors.length > 0 ? { print_area: printArea } : {}),
           dimensions_image: dimensionsImage, characteristics_fr: characteristicsFr || null,
@@ -210,6 +211,14 @@ function ProductModal({ product, onClose }: { product?: any; onClose: () => void
           <option value="">{t('noCategory')}</option>
           {PRODUCT_CATEGORIES.map((c) => (
             <option key={c} value={c}>{t(`category_${c}`)}</option>
+          ))}
+        </select>
+
+        <label className="text-sm text-text-secondary mb-1.5 block">{t('collection')}</label>
+        <select className="input mb-4" value={form.collection} onChange={(e) => setForm({ ...form, collection: e.target.value })}>
+          <option value="">{t('noCollection')}</option>
+          {PRODUCT_COLLECTIONS.map((c) => (
+            <option key={c} value={c}>{t(`collection_${c}`)}</option>
           ))}
         </select>
 
@@ -420,7 +429,7 @@ export default function AdminProductsPage() {
       <div className="card !p-0 overflow-x-auto">
         <table className="w-full">
           <thead><tr className="border-b border-border">
-            {[t('colProduct'), t('colCategory'), t('colPrice'), t('colStock'), t('colActions')].map((h) => (
+            {[t('colProduct'), t('colCategory'), t('colCollection'), t('colPrice'), t('colStock'), t('colActions')].map((h) => (
               <th key={h} className="text-start px-4 py-3 text-xs text-text-secondary uppercase tracking-wide">{h}</th>
             ))}
           </tr></thead>
@@ -439,6 +448,7 @@ export default function AdminProductsPage() {
                   </div>
                 </td>
                 <td className="px-4 py-3 text-text-secondary text-sm">{p.category ? t(`category_${p.category}`) : '—'}</td>
+                <td className="px-4 py-3 text-text-secondary text-sm">{p.collection ? t(`collection_${p.collection}`) : '—'}</td>
                 <td className="px-4 py-3 font-heading text-secondary">{formatDZD(p.price_dzd)}</td>
                 <td className="px-4 py-3">
                   <span className={`badge ${p.status === 'available' ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'}`}>

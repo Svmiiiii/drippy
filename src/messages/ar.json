@@ -63,7 +63,12 @@
     "category_polos": "بولو",
     "category_hoodies_sweats": "هوديز وسويت شيرت",
     "category_vestes": "سترات",
-    "category_sacs_accessoires": "حقائب وإكسسوارات"
+    "category_sacs_accessoires": "حقائب وإكسسوارات",
+    "allCollections": "كل المجموعات",
+    "collection_ete": "مجموعة الصيف",
+    "collection_automne": "مجموعة الخريف",
+    "collection_hiver": "مجموعة الشتاء",
+    "collection_printemps": "مجموعة الربيع"
   },
   "product": {
     "previewSubtitle": "معاينة دقيقة للنتيجة النهائية",
@@ -78,12 +83,20 @@
     "textColor": "لون النص",
     "customColor": "لون مخصص",
     "font": "الخط",
+    "textSize": "حجم النص",
     "quantity": "الكمية",
     "total": "المجموع",
     "order": "اطلب",
     "characteristics": "الخصائص",
     "dimensions": "المقاسات",
-    "outOfStock": "نفدت الكمية"
+    "outOfStock": "نفدت الكمية",
+    "logoChoice": "شعار Drippy",
+    "logoBadge": "شارة",
+    "logoWordmark": "مع النص",
+    "logoPosition": "موضع الشعار",
+    "positionCenter": "وسط القميص",
+    "positionTopLeft": "أعلى اليسار (القلب)",
+    "logoPositionAccessoryHint": "سيقوم الشريك بوضع الشعار على الإكسسوار."
   },
   "checkout": {
     "finalizeOrder": "إتمام الطلب",
@@ -103,6 +116,8 @@
     "size": "المقاس",
     "color": "اللون",
     "style": "النمط",
+    "logoPositionCenter": "الشعار في الوسط",
+    "logoPositionTopLeft": "الشعار أعلى اليسار (القلب)",
     "subtotal": "المجموع الفرعي",
     "promoTotal": "المجموع",
     "shipping": "التوصيل",
@@ -371,6 +386,7 @@
       "shipping": "الشحن",
       "analytics": "التحليلات",
       "promos": "أكواد الترويج",
+      "settings": "الإعدادات",
       "admins": "المسؤولون",
       "adminRole": "مسؤول",
       "superAdminRole": "مسؤول أعلى",
@@ -471,7 +487,13 @@
       "below": "أسفل",
       "textColor": "لون النص",
       "customColor": "لون مخصص",
-      "font": "الخط"
+      "font": "الخط",
+      "textSize": "الحجم",
+      "logoChoice": "شعار Drippy",
+      "logoBadge": "شارة",
+      "logoWordmark": "مع النص",
+      "positionCenter": "الوسط",
+      "positionTopLeft": "أعلى اليسار (القلب)"
     },
     "customers": {
       "title": "العملاء",
@@ -485,13 +507,23 @@
       "enable": "تفعيل",
       "blockQr": "حظر QR",
       "unblockQr": "إلغاء حظر QR",
-      "noCustomers": "لا يوجد عملاء."
+      "noCustomers": "لا يوجد عملاء.",
+      "view": "عرض",
+      "phone": "الهاتف",
+      "loading": "جارٍ التحميل…",
+      "loadError": "تعذر تحميل تفاصيل هذا العميل.",
+      "currentDestination": "الوجهة الحالية",
+      "noQr": "لا يوجد رمز QR تم إنشاؤه لهذا العميل.",
+      "downloadWelcomePdf": "بطاقة الترحيب (المعرّف + كلمة المرور)",
+      "orders": "الطلبات",
+      "noOrders": "لا توجد طلبات."
     },
     "products": {
       "title": "المنتجات",
       "newProduct": "+ منتج جديد",
       "colProduct": "المنتج",
       "colCategory": "الفئة",
+      "colCollection": "المجموعة",
       "colPrice": "السعر",
       "colStock": "المخزون",
       "colActions": "إجراءات",
@@ -534,6 +566,12 @@
       "category_hoodies_sweats": "هوديز وسويت شيرت",
       "category_vestes": "سترات",
       "category_sacs_accessoires": "حقائب وإكسسوارات",
+      "collection": "المجموعة",
+      "noCollection": "لا توجد مجموعة",
+      "collection_ete": "الصيف",
+      "collection_automne": "الخريف",
+      "collection_hiver": "الشتاء",
+      "collection_printemps": "الربيع",
       "colors": "الألوان المتوفرة",
       "colorsHint": "لكل لون صورته الخاصة — سيرى العميل نتيجة رمز QR على الصورة الصحيحة حسب اللون الذي يختاره.",
       "colorNamePlaceholder": "اسم اللون (مثال: أسود)",
@@ -651,6 +689,18 @@
       "enable": "تفعيل",
       "noPromos": "لا توجد أكواد ترويجية."
     },
+    "settings": {
+      "title": "إعدادات الموقع",
+      "subtitle": "نصوص معروضة على الموقع، قابلة للتعديل دون أي تدخل تقني.",
+      "heroScanText": "النص أسفل رمز QR (الصفحة الرئيسية)",
+      "heroScanTextHint": "تُترجم تلقائيًا إلى الإنجليزية والعربية عند الحفظ.",
+      "heroScanTextPlaceholder": "امسحني لموعد 😏",
+      "loading": "جارٍ التحميل…",
+      "saving": "جارٍ الحفظ...",
+      "save": "حفظ",
+      "saved": "تم الحفظ!",
+      "error": "خطأ"
+    },
     "partner": {
       "title": "الإنتاج والشريك",
       "subtitle": "أعد إدخال كل طلب في بوابة شريك التطريز، ثم ضعه كمُرسَل.",
@@ -686,7 +736,13 @@
       "downloadClientCard": "بطاقة العميل (المعرّف + كلمة المرور)",
       "total": "المبلغ الواجب تحصيله",
       "sameQrNote": "رمز QR واحد لكل الطلب (استخدمه لكل عنصر أدناه)",
-      "flockImageLabel": "الصورة المراد طباعتها (QR + النص)"
+      "flockImageLabel": "الصورة المراد طباعتها (QR + النص)",
+      "logoLabel": "الشعار:",
+      "logoBadge": "شارة",
+      "logoWordmark": "مع النص",
+      "logoPositionCenter": "الوسط",
+      "logoPositionTopLeft": "أعلى اليسار (القلب)",
+      "logoPositionPartnerChoice": "الموضع حسب اختيار الشريك"
     },
     "admins": {
       "title": "المسؤولون",

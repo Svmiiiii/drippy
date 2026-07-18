@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { QrCode } from '@/components/QrCode';
+import { LogoPreview } from '@/components/LogoPreview';
 import { formatDZD } from '@/lib/utils';
 import { WILAYAS, QR_PRESETS, QR_FONTS } from '@/lib/design';
 
@@ -122,6 +123,8 @@ export function OrdersTable({ orders }: { orders: any[] }) {
             id: it.id, size: it.size, quantity: it.quantity, garment_color: it.garment_color || null,
             qr_preset: it.qr_preset, text_content: it.text_content || null,
             text_position: it.text_position ?? 'none', text_font: it.text_font, text_color: it.text_color,
+            text_size: it.text_size ?? 100,
+            logo_choice: it.logo_choice ?? null, logo_position: it.logo_position ?? null,
           })),
           removed_item_ids: removedIds,
         }),
@@ -293,7 +296,7 @@ export function OrdersTable({ orders }: { orders: any[] }) {
                   {itemsForm.map((it) => (
                     <div key={it.id} className="bg-surface rounded-xl p-3 space-y-3">
                       <div className="flex items-center gap-3">
-                        <QrCode preset={it.qr_preset} text={it.text_content} textPosition={it.text_content ? it.text_position : 'none'} font={it.text_font} textColor={it.text_color} size={56} />
+                        <QrCode preset={it.qr_preset} text={it.text_content} textPosition={it.text_content ? it.text_position : 'none'} font={it.text_font} textColor={it.text_color} textSize={it.text_size} size={56} />
                         <div className="flex-1 min-w-0">
                           <div className="font-semibold text-sm truncate">{it.product_name}</div>
                           <div className="text-text-secondary text-xs">{formatDZD(it.unit_price_dzd)} / {t('unit')}</div>
@@ -318,6 +321,28 @@ export function OrdersTable({ orders }: { orders: any[] }) {
                       </div>
 
                       <div>
+                        <label className="text-xs text-text-secondary mb-1.5 block">{t('logoChoice')}</label>
+                        <div className="flex items-center gap-4">
+                          <div className="flex gap-2">
+                            {(['badge', 'wordmark'] as const).map((v) => (
+                              <button key={v} onClick={() => updateItemRow(it.id, 'logo_choice', v)}
+                                className={`p-1.5 rounded-lg border-2 transition ${it.logo_choice === v ? 'border-secondary bg-secondary/10' : 'border-border'}`}>
+                                <LogoPreview variant={v} colors={QR_PRESETS.find((p) => p.id === it.qr_preset)?.colors ?? QR_PRESETS[0].colors} size={32} />
+                              </button>
+                            ))}
+                          </div>
+                          <div className="flex gap-1.5">
+                            {(['center', 'top_left'] as const).map((v) => (
+                              <button key={v} onClick={() => updateItemRow(it.id, 'logo_position', v)}
+                                className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition ${it.logo_position === v ? 'border-secondary bg-secondary/15 text-white' : 'border-border text-text-secondary'}`}>
+                                {v === 'center' ? t('positionCenter') : t('positionTopLeft')}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
                         <label className="text-xs text-text-secondary mb-1.5 block">{t('text')}</label>
                         <input className="input !py-1.5 text-sm" placeholder={t('textPlaceholder')} value={it.text_content ?? ''}
                           onChange={(e) => updateItemRow(it.id, 'text_content', e.target.value.slice(0, 80))} />
@@ -325,7 +350,7 @@ export function OrdersTable({ orders }: { orders: any[] }) {
                       </div>
 
                       {it.text_content && (
-                        <div className="grid sm:grid-cols-3 gap-3">
+                        <div className="grid sm:grid-cols-4 gap-3">
                           <div>
                             <label className="text-xs text-text-secondary mb-1.5 block">{t('position')}</label>
                             <div className="flex gap-1.5">
@@ -355,6 +380,15 @@ export function OrdersTable({ orders }: { orders: any[] }) {
                               {QR_FONTS.map((f) => <option key={f.id} value={f.id}>{f.id}</option>)}
                             </select>
                           </div>
+                          <div>
+                            <label className="text-xs text-text-secondary mb-1.5 block">{t('textSize')} — {it.text_size ?? 100}%</label>
+                            <div className="flex items-center gap-1.5">
+                              <button onClick={() => updateItemRow(it.id, 'text_size', Math.max(60, (it.text_size ?? 100) - 10))}
+                                className="px-2 py-1.5 rounded-lg text-xs border border-border text-text-secondary hover:text-white transition">A-</button>
+                              <button onClick={() => updateItemRow(it.id, 'text_size', Math.min(130, (it.text_size ?? 100) + 10))}
+                                className="px-2 py-1.5 rounded-lg text-sm border border-border text-text-secondary hover:text-white transition">A+</button>
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -374,10 +408,20 @@ export function OrdersTable({ orders }: { orders: any[] }) {
                 <div className="space-y-4">
                   {(sel.order_items ?? []).map((it: any) => (
                     <div key={it.id} className="flex items-center gap-4">
-                      <QrCode preset={it.qr_preset} size={64} text={it.text_content} textPosition={it.text_position} font={it.text_font} textColor={it.text_color} />
+                      <QrCode preset={it.qr_preset} size={64} text={it.text_content} textPosition={it.text_position} font={it.text_font} textColor={it.text_color} textSize={it.text_size} />
+                      {it.logo_choice && (
+                        <LogoPreview variant={it.logo_choice} colors={QR_PRESETS.find((p) => p.id === it.qr_preset)?.colors ?? QR_PRESETS[0].colors} size={44} />
+                      )}
                       <div><div className="font-semibold">{it.product_name}</div>
                         <div className="text-text-secondary text-sm">{t('size')} {it.size}{it.garment_color ? ` · ${t('color')} ${it.garment_color}` : ''} · {t('qty')} {it.quantity} · {it.qr_preset}</div>
-                        {it.text_content && <div className="text-secondary text-xs mt-1">&quot;{it.text_content}&quot;</div>}</div>
+                        {it.text_content && <div className="text-secondary text-xs mt-1">&quot;{it.text_content}&quot;</div>}
+                        {it.logo_choice && (
+                          <div className="text-text-secondary text-xs mt-1">
+                            {t('logoChoice')}: {it.logo_choice === 'wordmark' ? t('logoWordmark') : t('logoBadge')}
+                            {it.logo_position && ` · ${it.logo_position === 'top_left' ? t('positionTopLeft') : t('positionCenter')}`}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>

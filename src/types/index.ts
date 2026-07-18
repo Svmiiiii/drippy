@@ -3,6 +3,7 @@ export type ApiResponse<T> = { success: true; data: T } | { success: false; erro
 export interface PrintArea { top: number; left: number; width: number; }
 
 export type ProductCategory = 'tshirts' | 'polos' | 'hoodies_sweats' | 'vestes' | 'sacs_accessoires';
+export type ProductCollection = 'ete' | 'automne' | 'hiver' | 'printemps';
 
 export interface ProductColor { name: string; hex: string; image: string; available: boolean; }
 
@@ -10,7 +11,7 @@ export interface Product {
   id: string; slug: string; name: string; description: string | null;
   price_dzd: number; status: 'available' | 'out_of_stock' | 'archived';
   badge: string | null; images: string[]; print_area: PrintArea | null;
-  category: ProductCategory | null; colors: ProductColor[];
+  category: ProductCategory | null; collection: ProductCollection | null; colors: ProductColor[];
   dimensions_image: string | null;
   characteristics_fr: string | null; characteristics_en: string | null; characteristics_ar: string | null;
   product_variants?: { id: string; size: string; available: boolean; unavailable_colors?: string[] }[];
@@ -33,4 +34,6 @@ export interface OrderItem {
   id: string; product_name: string; size: string; quantity: number;
   qr_preset: string; text_enabled: boolean; text_content: string | null;
   text_position: 'above' | 'below' | 'none';
+  logo_choice: 'badge' | 'wordmark' | null;
+  logo_position: 'center' | 'top_left' | null;
 }

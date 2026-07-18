@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ProductQrPreview, DEFAULT_PRINT_AREA } from '@/components/ProductQrPreview';
+import { LogoPreview } from '@/components/LogoPreview';
 import { QR_PRESETS, QR_FONTS, sortSizes } from '@/lib/design';
 import { formatDZD } from '@/lib/utils';
 import type { Product } from '@/types';
@@ -31,16 +32,22 @@ export function Customizer({ product }: { product: Product }) {
   const [textPos, setTextPos] = useState<'above' | 'below' | 'none'>('below');
   const [font, setFont] = useState('Anton');
   const [textColor, setTextColor] = useState('#FFFFFF');
+  const [textSize, setTextSize] = useState(100);
   const [qty, setQty] = useState(1);
+  const [logoChoice, setLogoChoice] = useState<'badge' | 'wordmark'>('badge');
+  const [logoPosition, setLogoPosition] = useState<'center' | 'top_left'>('center');
+  const isAccessory = product.category === 'sacs_accessoires';
 
   const previewImageUrl = colors.find((c) => c.name === color)?.image ?? product.images?.[0] ?? null;
+  const presetColors = QR_PRESETS.find((p) => p.id === preset)?.colors ?? QR_PRESETS[0].colors;
 
   const goCheckout = () => {
     const cfg = encodeURIComponent(JSON.stringify({
       product_id: product.id, slug: product.slug, name: product.name,
       price: product.price_dzd, size, qty, preset,
       garment_color: color || undefined,
-      text: { enabled: !!text, content: text, position: text ? textPos : 'none', font, color: textColor },
+      text: { enabled: !!text, content: text, position: text ? textPos : 'none', font, color: textColor, size: textSize },
+      logo: { choice: logoChoice, position: isAccessory ? undefined : logoPosition },
     }));
     router.push(`/checkout?cfg=${cfg}`);
   };
@@ -53,7 +60,7 @@ export function Customizer({ product }: { product: Product }) {
           <ProductQrPreview
             imageUrl={previewImageUrl?.startsWith('http') ? previewImageUrl : null}
             printArea={product.print_area ?? DEFAULT_PRINT_AREA}
-            preset={preset} text={text} textPosition={text ? textPos : 'none'} font={font} textColor={textColor}
+            preset={preset} text={text} textPosition={text ? textPos : 'none'} font={font} textColor={textColor} textSize={textSize}
           />
         </div>
         <div className="text-center">
@@ -124,6 +131,37 @@ export function Customizer({ product }: { product: Product }) {
           </div>
         </div>
 
+        {/* DRIPPY LOGO — flocked on the garment face, recolored to match the QR style above */}
+        <div className="mt-6">
+          <label className="text-sm text-text-secondary mb-2 block">{t('logoChoice')}</label>
+          <div className="flex gap-3">
+            {(['badge', 'wordmark'] as const).map((v) => (
+              <button key={v} onClick={() => setLogoChoice(v)}
+                className={`p-3 rounded-xl border-2 flex flex-col items-center gap-2 transition ${logoChoice === v ? 'border-secondary bg-secondary/10' : 'border-border hover:border-primary'}`}>
+                <LogoPreview variant={v} colors={presetColors} size={56} />
+                <span className="text-[11px] text-text-secondary">{v === 'badge' ? t('logoBadge') : t('logoWordmark')}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {!isAccessory && (
+          <div className="mt-4">
+            <label className="text-sm text-text-secondary mb-2 block">{t('logoPosition')}</label>
+            <div className="flex gap-2">
+              {(['center', 'top_left'] as const).map((v) => (
+                <button key={v} onClick={() => setLogoPosition(v)}
+                  className={`px-3.5 py-2 rounded-[10px] text-sm font-semibold border transition ${logoPosition === v ? 'border-secondary bg-secondary/15 text-white' : 'border-border text-text-secondary'}`}>
+                  {v === 'center' ? t('positionCenter') : t('positionTopLeft')}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        {isAccessory && (
+          <div className="mt-2 text-xs text-text-secondary">{t('logoPositionAccessoryHint')}</div>
+        )}
+
         {/* TEXT */}
         <div className="mt-6">
           <label className="text-sm text-text-secondary mb-2 block">{t('text')}</label>
@@ -164,6 +202,16 @@ export function Customizer({ product }: { product: Product }) {
                     className={`px-2 py-2 rounded-[10px] text-sm border transition ${font === f.id ? 'border-secondary bg-secondary/15 text-white' : 'border-border text-text-secondary'}`}>
                     {f.id}<div className="text-[10px] text-text-secondary">{f.category}</div></button>
                 ))}
+              </div>
+            </div>
+            <div className="mt-4">
+              <label className="text-sm text-text-secondary mb-2 block">{t('textSize')}</label>
+              <div className="flex items-center gap-3">
+                <button onClick={() => setTextSize((s) => Math.max(60, s - 10))} className="btn-secondary !px-4 !py-2">A-</button>
+                <input type="range" min={60} max={130} step={10} value={textSize}
+                  onChange={(e) => setTextSize(Number(e.target.value))} className="flex-1" />
+                <button onClick={() => setTextSize((s) => Math.min(130, s + 10))} className="btn-secondary !px-4 !py-2 !text-lg">A+</button>
+                <span className="text-xs text-text-secondary w-10 text-end shrink-0">{textSize}%</span>
               </div>
             </div>
           </>
