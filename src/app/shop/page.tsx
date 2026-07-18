@@ -15,8 +15,7 @@ export default async function ShopPage() {
     <>
       <Navbar />
       <div className="max-w-6xl mx-auto px-6 py-12">
-        <h1 className="font-heading text-5xl mb-2 gradient-text">{t('title')}</h1>
-        <p className="text-text-secondary mb-10">{t('subtitle')}</p>
+        <h1 className="font-heading text-5xl mb-10 gradient-text">{t('title')}</h1>
         <ShopClient products={(products as Product[]) ?? []} />
       </div>
       <Footer />
