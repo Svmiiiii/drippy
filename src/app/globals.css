@@ -45,4 +45,11 @@ body {
   }
   .badge { @apply inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-semibold uppercase tracking-wide; }
   .gradient-text { @apply bg-gradient-neon bg-clip-text text-transparent; }
+
+  /* Editorial/luxury refinements for the shop & product pages — small
+     tracked micro-labels and a border-only card variant, so the signature
+     neon gradient reads as a deliberate accent rather than competing with
+     heavy shadows/boxes everywhere. */
+  .label-luxe { @apply text-[11px] uppercase tracking-[0.18em] text-text-secondary font-medium; }
+  .card-flat { @apply border border-border rounded-[24px]; }
 }

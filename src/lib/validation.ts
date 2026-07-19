@@ -41,7 +41,7 @@ export const orderItemSchema = z.object({
   garment_color: z.string().min(1).optional(),
   qr_style: z.object({
     preset: z.string(),
-    color: z.string().optional(),
+    color: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
   }),
   text: z
     .object({

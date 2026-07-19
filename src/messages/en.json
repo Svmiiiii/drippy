@@ -3,7 +3,8 @@
     "collection": "Collection",
     "login": "Sign in",
     "mySpace": "My space",
-    "logout": "Logout"
+    "logout": "Logout",
+    "cart": "Cart"
   },
   "hero": {
     "badge": "Streetwear × Digital Identity",
@@ -86,8 +87,10 @@
     "quantity": "Quantity",
     "total": "Total",
     "order": "Order",
+    "addToCart": "Add to cart",
     "characteristics": "Characteristics",
     "dimensions": "Dimensions",
+    "detailsButton": "Details",
     "outOfStock": "Out of stock",
     "logoChoice": "Drippy logo",
     "logoBadge": "Badge",
@@ -140,6 +143,22 @@
     "adminWillCall": "An admin will call you to confirm it.",
     "codBanner": "Cash on delivery · Delivery all over Algeria",
     "backHome": "Back to home"
+  },
+  "cart": {
+    "title": "Your cart",
+    "empty": "Your cart is empty",
+    "emptyHint": "Explore the collection and customize your first item.",
+    "backToShop": "View the shop",
+    "size": "Size",
+    "color": "Color",
+    "style": "Style",
+    "logo": "Logo:",
+    "logoBadge": "Badge",
+    "logoWordmark": "With text",
+    "remove": "Remove",
+    "subtotal": "Subtotal",
+    "continueShopping": "Continue shopping",
+    "checkout": "Checkout"
   },
   "dashboard": {
     "myQr": "My QR",

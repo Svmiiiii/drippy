@@ -6,7 +6,7 @@ import { parse as parseFont, Font } from 'opentype.js';
 import path from 'path';
 import { readFileSync } from 'fs';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { QR_PRESETS } from '@/lib/design';
+import { getQrColors } from '@/lib/design';
 
 const BUCKET = 'productions';
 const APP_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
@@ -121,6 +121,7 @@ async function generateLogoPng(choice: 'badge' | 'wordmark', colors: string[]): 
 
 interface ItemStyle {
   qrPreset: string;
+  qrColor?: string;
   text?: string;
   textPosition?: 'above' | 'below' | 'none';
   textFont?: string;
@@ -164,8 +165,7 @@ function finderPatternSvg(originCol: number, originRow: number, qrOffsetY: numbe
  * Background is transparent (suitable for flocking/DTF print).
  */
 async function generateItemSvg(qrUrl: string, style: ItemStyle): Promise<string> {
-  const preset = QR_PRESETS.find((p) => p.id === style.qrPreset) ?? QR_PRESETS[0];
-  const colors = preset.colors;
+  const colors = getQrColors(style.qrPreset, style.qrColor);
 
   // Get QR data matrix via qrcode library
   const qrData = (QRCode as any).create(qrUrl, { errorCorrectionLevel: 'H' });
@@ -410,7 +410,7 @@ async function generateProductionPdf(opts: {
     l(item.product_name ?? 'Produit', 16, fontBold, white);
     y -= 4;
     l(`Taille : ${item.size ?? '—'}   |   Quantité : ${item.quantity ?? 1}`, 12, fontReg, white);
-    l(`Style QR : ${item.qr_preset ?? 'NEON'}`, 12, fontBold, pink);
+    l(`Style QR : ${item.qr_preset === 'CUSTOM' ? `Custom (${item.qr_color})` : (item.qr_preset ?? 'NEON')}`, 12, fontBold, pink);
     if (item.text_content) {
       l(`Texte : "${item.text_content}"`, 11, fontReg, cyan);
       l(`Position : ${item.text_position ?? 'below'}   |   Police : ${item.text_font ?? 'Anton'}   |   Couleur : ${item.text_color ?? '#FFFFFF'}`, 10, fontReg, grey);
@@ -522,6 +522,7 @@ export async function generateProductionFiles(
     const item = items[i];
     const style: ItemStyle = {
       qrPreset: item.qr_preset ?? 'NEON',
+      qrColor: item.qr_color ?? undefined,
       text: item.text_content ?? undefined,
       textPosition: item.text_position ?? 'none',
       textFont: item.text_font ?? 'Anton',
@@ -540,8 +541,7 @@ export async function generateProductionFiles(
     );
 
     if (item.logo_choice === 'badge' || item.logo_choice === 'wordmark') {
-      const presetColors = QR_PRESETS.find((p) => p.id === style.qrPreset)?.colors ?? QR_PRESETS[0].colors;
-      const logoPng = await generateLogoPng(item.logo_choice, [...presetColors]);
+      const logoPng = await generateLogoPng(item.logo_choice, getQrColors(style.qrPreset, style.qrColor));
       const logoPath = `${base}/item_logo_${i}.png`;
       itemLogoPaths.push(logoPath);
       itemLogoPngs.push(logoPng);

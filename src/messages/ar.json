@@ -3,7 +3,8 @@
     "collection": "المجموعة",
     "login": "تسجيل الدخول",
     "mySpace": "مساحتي",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "cart": "السلة"
   },
   "hero": {
     "badge": "ملابس شارع × هوية رقمية",
@@ -86,8 +87,10 @@
     "quantity": "الكمية",
     "total": "المجموع",
     "order": "اطلب",
+    "addToCart": "أضف إلى السلة",
     "characteristics": "الخصائص",
     "dimensions": "المقاسات",
+    "detailsButton": "التفاصيل",
     "outOfStock": "نفدت الكمية",
     "logoChoice": "شعار Drippy",
     "logoBadge": "شارة",
@@ -140,6 +143,22 @@
     "adminWillCall": "سيتصل بك مسؤول لتأكيده.",
     "codBanner": "الدفع عند الاستلام · التوصيل في جميع أنحاء الجزائر",
     "backHome": "العودة إلى الرئيسية"
+  },
+  "cart": {
+    "title": "سلتك",
+    "empty": "سلتك فارغة",
+    "emptyHint": "اكتشف المجموعة وخصص أول قطعة لك.",
+    "backToShop": "عرض المتجر",
+    "size": "المقاس",
+    "color": "اللون",
+    "style": "النمط",
+    "logo": "الشعار:",
+    "logoBadge": "شارة",
+    "logoWordmark": "مع النص",
+    "remove": "إزالة",
+    "subtotal": "المجموع الفرعي",
+    "continueShopping": "متابعة التسوق",
+    "checkout": "إتمام الطلب"
   },
   "dashboard": {
     "myQr": "رمز QR الخاص بي",

@@ -1,18 +1,17 @@
 'use client';
-import { useState, Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useCart } from '@/components/CartProvider';
 import { QrCode } from '@/components/QrCode';
 import { LogoPreview } from '@/components/LogoPreview';
-import { WILAYAS, getShippingFee, QR_PRESETS } from '@/lib/design';
+import { WILAYAS, getShippingFee, getQrColors } from '@/lib/design';
 import { formatDZD } from '@/lib/utils';
 
 function CheckoutForm() {
-  const sp = useSearchParams();
   const router = useRouter();
   const t = useTranslations('checkout');
-  let cfg: Record<string, any> = {};
-  try { cfg = JSON.parse(decodeURIComponent(sp.get('cfg') ?? '{}')); } catch { /* invalid param */ }
+  const { items, clear } = useCart();
 
   const [form, setForm] = useState({ name: '', phone: '', email: '', wilaya: '', commune: '', address: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -23,11 +22,11 @@ function CheckoutForm() {
   const [promoLoading, setPromoLoading] = useState(false);
   const [promoError, setPromoError] = useState('');
 
-  if (!cfg.product_id) {
+  if (items.length === 0 && !done) {
     return <div className="max-w-xl mx-auto px-6 py-20 text-center text-text-secondary">{t('noConfig')} <a href="/shop" className="text-primary">{t('backToShop')}</a></div>;
   }
 
-  const subtotal = (cfg.price ?? 0) * (cfg.qty ?? 1);
+  const subtotal = items.reduce((sum, i) => sum + i.price * i.qty, 0);
   const shipping = getShippingFee(form.wilaya);
   const discount = promoApplied?.discount_dzd ?? 0;
   const total = Math.max(0, subtotal + (form.wilaya ? shipping : 0) - discount);
@@ -61,18 +60,18 @@ function CheckoutForm() {
         body: JSON.stringify({
           customer_name: form.name, customer_phone: form.phone, customer_email: form.email,
           wilaya_code: form.wilaya, commune: form.commune, address: form.address,
-          items: [{
-            product_id: cfg.product_id, quantity: cfg.qty, size: cfg.size,
-            garment_color: cfg.garment_color,
-            qr_style: { preset: cfg.preset },
-            text: cfg.text,
-            logo: cfg.logo,
-          }],
+          items: items.map((i) => ({
+            product_id: i.product_id, quantity: i.qty, size: i.size,
+            garment_color: i.garment_color,
+            qr_style: { preset: i.preset, color: i.qrColor },
+            text: i.text,
+            logo: i.logo,
+          })),
           ...(promoApplied ? { promo_code: promoApplied.code } : {}),
         }),
       });
       const json = await res.json();
-      if (json.success) setDone({ number: json.data.order_number });
+      if (json.success) { setDone({ number: json.data.order_number }); clear(); }
       else setErrors({ form: json.error?.message ?? t('errorInvalidPromo') });
     } catch {
       setErrors({ form: t('errorInvalidPromo') });
@@ -127,16 +126,21 @@ function CheckoutForm() {
       </div>
 
       <div className="card mt-8 mb-6">
-        <div className="flex items-center gap-4 mb-4">
-          <QrCode preset={cfg.preset} size={72} text={cfg.text?.content} textPosition={cfg.text?.position} font={cfg.text?.font} textColor={cfg.text?.color} textSize={cfg.text?.size} />
-          {cfg.logo?.choice && (
-            <LogoPreview variant={cfg.logo.choice} colors={QR_PRESETS.find((p) => p.id === cfg.preset)?.colors ?? QR_PRESETS[0].colors} size={48} />
-          )}
-          <div>
-            <div className="font-bold">{cfg.name}</div>
-            <div className="text-text-secondary text-sm mt-1">{t('size')} {cfg.size}{cfg.garment_color ? ` · ${t('color')} ${cfg.garment_color}` : ''} · {cfg.qty}× · {t('style')} {cfg.preset}</div>
-            {cfg.logo?.position && <div className="text-text-secondary text-sm">{cfg.logo.position === 'center' ? t('logoPositionCenter') : t('logoPositionTopLeft')}</div>}
-          </div>
+        <div className="space-y-4 mb-4">
+          {items.map((item) => (
+            <div key={item.id} className="flex items-center gap-4">
+              <QrCode preset={item.preset} color={item.qrColor} size={64} text={item.text?.content} textPosition={item.text?.position} font={item.text?.font} textColor={item.text?.color} textSize={item.text?.size} />
+              {item.logo?.choice && (
+                <LogoPreview variant={item.logo.choice} colors={getQrColors(item.preset, item.qrColor)} size={40} />
+              )}
+              <div className="flex-1 min-w-0">
+                <div className="font-bold">{item.name}</div>
+                <div className="text-text-secondary text-sm mt-1">{t('size')} {item.size}{item.garment_color ? ` · ${t('color')} ${item.garment_color}` : ''} · {item.qty}× · {t('style')} {item.preset === 'CUSTOM' ? item.qrColor : item.preset}</div>
+                {item.logo?.position && <div className="text-text-secondary text-sm">{item.logo.position === 'center' ? t('logoPositionCenter') : t('logoPositionTopLeft')}</div>}
+              </div>
+              <span className="font-heading text-secondary shrink-0">{formatDZD(item.price * item.qty)}</span>
+            </div>
+          ))}
         </div>
         <div className="border-t border-border pt-4 space-y-2">
           <div className="flex justify-between text-sm">
@@ -188,10 +192,5 @@ function CheckoutForm() {
 }
 
 export function CheckoutInner() {
-  const t = useTranslations('common');
-  return (
-    <Suspense fallback={<div className="py-20 text-center text-text-secondary">{t('loading')}</div>}>
-      <CheckoutForm />
-    </Suspense>
-  );
+  return <CheckoutForm />;
 }

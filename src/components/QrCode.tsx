@@ -1,10 +1,11 @@
 'use client';
 import { useEffect, useRef } from 'react';
-import { QR_PRESETS } from '@/lib/design';
+import { getQrColors } from '@/lib/design';
 
 interface Props {
   value?: string;
   preset?: string;
+  color?: string;
   text?: string;
   textPosition?: 'above' | 'below' | 'none';
   font?: string;
@@ -19,9 +20,12 @@ interface Props {
 const BASE_TEXT_PX = 14;
 
 // Renders a styled QR using qr-code-styling, with optional text above/below.
-export function QrCode({ value = 'https://drippy.dz', preset = 'NEON', text, textPosition = 'none', font = 'Anton', textColor = '#FFFFFF', textSize = 100, size = 160 }: Props) {
+// `color` is the customer's own hex pick when `preset === 'CUSTOM'` — see
+// getQrColors in lib/design.ts, the single source of truth for preset↔color
+// resolution shared with the flocked logo preview and server-side printing.
+export function QrCode({ value = 'https://drippy.dz', preset = 'NEON', color, text, textPosition = 'none', font = 'Anton', textColor = '#FFFFFF', textSize = 100, size = 160 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const p = QR_PRESETS.find((x) => x.id === preset) ?? QR_PRESETS[3];
+  const colors = getQrColors(preset, color);
 
   useEffect(() => {
     let qr: any;
@@ -33,15 +37,19 @@ export function QrCode({ value = 'https://drippy.dz', preset = 'NEON', text, tex
           type: 'rounded',
           gradient: {
             type: 'linear', rotation: 0.78,
-            colorStops: p.colors.map((c, i) => ({ offset: p.colors.length > 1 ? i / (p.colors.length - 1) : 0, color: c })),
+            colorStops: colors.map((c, i) => ({ offset: colors.length > 1 ? i / (colors.length - 1) : 0, color: c })),
           },
         },
         backgroundOptions: { color: 'transparent' },
-        cornersSquareOptions: { type: 'extra-rounded', color: p.colors[0] },
+        cornersSquareOptions: { type: 'extra-rounded', color: colors[0] },
       });
       if (ref.current) { ref.current.innerHTML = ''; qr.append(ref.current); }
     })();
-  }, [value, preset, size, p.colors]);
+    // colors.join(',') (not `colors`) so the effect only reruns when the
+    // actual color values change — getQrColors returns a fresh array on
+    // every render, which would otherwise remount the QR on unrelated
+    // parent re-renders (e.g. typing in the text field).
+  }, [value, preset, size, colors.join(',')]);
 
   return (
     <div className="flex flex-col items-center gap-2">

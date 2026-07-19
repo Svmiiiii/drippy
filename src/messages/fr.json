@@ -3,7 +3,8 @@
     "collection": "Collection",
     "login": "Se connecter",
     "mySpace": "Mon espace",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "cart": "Panier"
   },
   "hero": {
     "badge": "Streetwear × Digital Identity",
@@ -86,8 +87,10 @@
     "quantity": "Quantité",
     "total": "Total",
     "order": "Commander",
+    "addToCart": "Ajouter au panier",
     "characteristics": "Caractéristiques",
     "dimensions": "Dimensions",
+    "detailsButton": "Détails",
     "outOfStock": "Rupture de stock",
     "logoChoice": "Logo Drippy",
     "logoBadge": "Badge",
@@ -140,6 +143,22 @@
     "adminWillCall": "Un administrateur va t'appeler pour la confirmer.",
     "codBanner": "Paiement à la livraison · Livraison partout en Algérie",
     "backHome": "Retour à l'accueil"
+  },
+  "cart": {
+    "title": "Ton panier",
+    "empty": "Ton panier est vide",
+    "emptyHint": "Découvre la collection et personnalise ton premier article.",
+    "backToShop": "Voir la boutique",
+    "size": "Taille",
+    "color": "Couleur",
+    "style": "Style",
+    "logo": "Logo :",
+    "logoBadge": "Badge",
+    "logoWordmark": "Avec texte",
+    "remove": "Retirer",
+    "subtotal": "Sous-total",
+    "continueShopping": "Continuer mes achats",
+    "checkout": "Passer la commande"
   },
   "dashboard": {
     "myQr": "Mon QR",

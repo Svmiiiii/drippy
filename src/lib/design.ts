@@ -41,6 +41,16 @@ export const QR_PRESETS = [
   { id: 'GALAXY', label: 'Galaxy', colors: ['#7C3AED', '#2563EB', '#EC4899'] },
 ] as const;
 
+// Customer-picked custom color (CHAPITRE 39bis — Couleur personnalisée QR).
+// Stored as preset id 'CUSTOM' + a hex string, resolved through this helper
+// everywhere a preset would otherwise be looked up, so the QR, the flocked
+// logo preview, and the server-side print files all stay in sync.
+export const CUSTOM_QR_PRESET_ID = 'CUSTOM';
+export function getQrColors(preset: string, customColor?: string | null): string[] {
+  if (preset === CUSTOM_QR_PRESET_ID && customColor) return [customColor];
+  return [...(QR_PRESETS.find((p) => p.id === preset)?.colors ?? QR_PRESETS[3].colors)];
+}
+
 // QR text fonts (CHAPITRE 40 — Polices officielles)
 export const QR_FONTS = [
   { id: 'Anton', category: 'STREET' },
