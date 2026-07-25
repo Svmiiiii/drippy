@@ -12,7 +12,7 @@ export async function Footer() {
 
   return (
     <footer className="bg-[#0E1320] border-t border-border py-10 text-center">
-      <div className="font-heading text-3xl gradient-text mb-2">DRIPPY</div>
+      <div className="font-heading text-3xl gradient-text mb-2">DROPIX</div>
       <div className="text-text-secondary text-sm mb-4">{t('tagline')}</div>
       <nav className="flex flex-wrap justify-center gap-x-5 gap-y-2 mb-4 px-6">
         {legalLinks.map((l) => (

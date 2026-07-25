@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const { supabase } = await requireAdmin();
     const { data } = await supabase.from('profiles')
-      .select('id, drippy_id, first_name, last_name, email, phone, account_status, created_at, qr_codes(qr_status)')
+      .select('id, dropix_id, first_name, last_name, email, phone, account_status, created_at, qr_codes(qr_status)')
       .eq('role', 'customer').order('created_at', { ascending: false });
     return ok({ items: data ?? [] });
   } catch (e) {

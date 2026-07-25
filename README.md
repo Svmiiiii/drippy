@@ -1,8 +1,8 @@
-# DRIPPY — Your QR. Your Story.
+# DROPIX — Your QR. Your Story.
 
 Streetwear premium where **every customer gets one permanent, unique QR code** embedded in their clothing. The QR belongs to the person, not the product — `1 client = 1 QR à vie`. Built for Algeria V1 (payment on delivery, FR/EN/AR).
 
-This is the full-stack implementation built from the Drippy V2 specification documents (Developer Bible, Technical Architecture, Database Architecture, API Specification, Design System).
+This is the full-stack implementation built from the Dropix V2 specification documents (Developer Bible, Technical Architecture, Database Architecture, API Specification, Design System).
 
 ---
 
@@ -35,7 +35,7 @@ src/
 │   ├── (auth)/                  login, forgot/reset password, verify-email
 │   ├── dashboard/               Client: Mon QR, commandes, stats, settings
 │   ├── admin/                   Admin: commandes, clients, produits, production, analytics
-│   ├── qr/[uid]/                Public scan page ("Powered by Drippy")
+│   ├── qr/[uid]/                Public scan page ("Powered by Dropix")
 │   └── api/                     All routes from API SPECIFICATION V2
 ├── lib/
 │   ├── supabase/                client / server / admin
@@ -101,10 +101,10 @@ Or paste `0001_init.sql`, `0002_scan_rpc.sql`, then `seed.sql` into the Supabase
 The schema soft-creates customer accounts only when an admin confirms an order. To get started, create an **admin** manually:
 
 ```sql
--- 1. In Supabase Auth, create a user: admin@drippy.dz / Admin123!
+-- 1. In Supabase Auth, create a user: admin@dropix.dz / Admin123!
 -- 2. Then link it to an admin profile (replace the auth uuid):
-insert into profiles (auth_user_id, drippy_id, first_name, email, role, account_status, email_verified)
-values ('<auth-user-uuid>', 'DRP-ADMIN1', 'Admin', 'admin@drippy.dz', 'super_admin', 'active', true);
+insert into profiles (auth_user_id, dropix_id, first_name, email, role, account_status, email_verified)
+values ('<auth-user-uuid>', 'DRP-ADMIN1', 'Admin', 'admin@dropix.dz', 'super_admin', 'active', true);
 ```
 
 A **client** account is created automatically the first time you confirm an order from the admin panel (this runs `confirm_order()` → CREATE_ACCOUNT + CREATE_QR + CREATE_PRODUCTION + CREATE_WELCOME_PACK).
@@ -173,6 +173,6 @@ Auth · Products · Orders · Customer QR/Stats/Account · Admin Orders/Products
 
 - The **Customizer** (`product/[slug]/Customizer.tsx`) is the most important screen — it renders a live "What You See Is What You Print" QR preview.
 - Welcome Pack PDF generation, production asset (PNG/SVG/PDF/ZIP) generation, and transactional emails are wired as stubs/TODOs where they belong (Supabase Edge Functions + Resend) — the data model and trigger points are all in place.
-- A single-file interactive prototype (`drippy.jsx`) is also provided for quickly visualizing the full UX without running the backend.
+- A single-file interactive prototype (`dropix.jsx`) is also provided for quickly visualizing the full UX without running the backend.
 
-© 2026 Drippy DZ
+© 2026 Dropix DZ

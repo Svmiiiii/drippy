@@ -38,7 +38,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-sm">
         <div className="text-center mb-10">
-          <Link href="/" className="font-heading text-5xl gradient-text">DRIPPY</Link>
+          <Link href="/" className="font-heading text-5xl gradient-text">DROPIX</Link>
           <p className="text-text-secondary text-sm mt-2">{t('loginSubtitle')}</p>
         </div>
         <div className="card">

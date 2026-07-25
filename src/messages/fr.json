@@ -8,10 +8,10 @@
   },
   "hero": {
     "badge": "Streetwear × Digital Identity",
-    "cta": "Créer mon Drippy",
+    "cta": "Créer mon Dropix",
     "discover": "Voir la collection",
     "description": "Porte ton identité numérique dans le monde réel. Un QR permanent, unique, qui t'appartient à vie.",
-    "poweredBy": "Powered by Drippy",
+    "poweredBy": "Powered by Dropix",
     "scanExample": "Scan me for a date 😏"
   },
   "home": {
@@ -35,7 +35,7 @@
     "returns": "Retours & remboursements",
     "privacy": "Confidentialité",
     "legal": "Mentions légales",
-    "copyright": "© 2026 Drippy DZ · Streetwear Premium · Algérie"
+    "copyright": "© 2026 Dropix DZ · Streetwear Premium · Algérie"
   },
   "common": {
     "save": "Sauvegarder",
@@ -92,7 +92,7 @@
     "dimensions": "Dimensions",
     "detailsButton": "Détails",
     "outOfStock": "Rupture de stock",
-    "logoChoice": "Logo Drippy",
+    "logoChoice": "Logo Dropix",
     "logoBadge": "Badge",
     "logoWordmark": "Avec texte",
     "logoPosition": "Position du logo",
@@ -264,7 +264,7 @@
       "sections": [
         {
           "h": "1. Objet",
-          "p": "Les présentes conditions régissent la vente des produits Drippy (vêtements intégrant un QR code permanent et personnalisable) commandés sur le site drippy.dz, à destination des clients situés en Algérie."
+          "p": "Les présentes conditions régissent la vente des produits Dropix (vêtements intégrant un QR code permanent et personnalisable) commandés sur le site dropix.dz, à destination des clients situés en Algérie."
         },
         {
           "h": "2. Prix",
@@ -272,7 +272,7 @@
         },
         {
           "h": "3. Commande et confirmation",
-          "p": "La commande est passée sans création de compte. Après validation du panier, un membre de l'équipe Drippy contacte le client par téléphone pour confirmer la commande, l'adresse de livraison et le montant total avant le lancement de la production. Un compte client (avec QR unique) est créé automatiquement à la confirmation."
+          "p": "La commande est passée sans création de compte. Après validation du panier, un membre de l'équipe Dropix contacte le client par téléphone pour confirmer la commande, l'adresse de livraison et le montant total avant le lancement de la production. Un compte client (avec QR unique) est créé automatiquement à la confirmation."
         },
         {
           "h": "4. Paiement",
@@ -280,7 +280,7 @@
         },
         {
           "h": "5. Personnalisation du QR code",
-          "p": "Chaque article est personnalisé selon le style, la couleur et le texte choisis par le client au moment de la commande. Une fois la commande confirmée par l'équipe Drippy, la fiche de production est figée et ne peut plus être modifiée (voir la page Retours & remboursements pour les cas d'erreur ou de défaut)."
+          "p": "Chaque article est personnalisé selon le style, la couleur et le texte choisis par le client au moment de la commande. Une fois la commande confirmée par l'équipe Dropix, la fiche de production est figée et ne peut plus être modifiée (voir la page Retours & remboursements pour les cas d'erreur ou de défaut)."
         },
         {
           "h": "6. Livraison",
@@ -292,7 +292,7 @@
         },
         {
           "h": "8. Contact",
-          "p": "Pour toute question relative à une commande : contact@drippy.dz"
+          "p": "Pour toute question relative à une commande : contact@dropix.dz"
         }
       ]
     },
@@ -311,7 +311,7 @@
         },
         {
           "h": "Défaut de fabrication",
-          "p": "En cas de défaut avéré (impression, flocage, QR code non fonctionnel), le client dispose de 7 jours après réception pour contacter Drippy à contact@drippy.dz avec une photo du défaut et son numéro de commande. Après vérification, Drippy propose un remplacement de l'article ou un remboursement."
+          "p": "En cas de défaut avéré (impression, flocage, QR code non fonctionnel), le client dispose de 7 jours après réception pour contacter Dropix à contact@dropix.dz avec une photo du défaut et son numéro de commande. Après vérification, Dropix propose un remplacement de l'article ou un remboursement."
         },
         {
           "h": "Modalités de remboursement",
@@ -319,7 +319,7 @@
         },
         {
           "h": "Contact",
-          "p": "contact@drippy.dz"
+          "p": "contact@dropix.dz"
         }
       ]
     },
@@ -330,7 +330,7 @@
       "sections": [
         {
           "h": "Données collectées",
-          "p": "Lors d'une commande : nom, téléphone, email, wilaya, commune et adresse de livraison. Après confirmation d'une commande : un compte client est créé (identifiant Drippy, QR unique). Lors de l'utilisation du QR code : des statistiques de scan sont enregistrées de façon agrégée et anonymisée (empreinte technique de l'appareil et de l'adresse IP, jamais l'IP en clair)."
+          "p": "Lors d'une commande : nom, téléphone, email, wilaya, commune et adresse de livraison. Après confirmation d'une commande : un compte client est créé (identifiant Dropix, QR unique). Lors de l'utilisation du QR code : des statistiques de scan sont enregistrées de façon agrégée et anonymisée (empreinte technique de l'appareil et de l'adresse IP, jamais l'IP en clair)."
         },
         {
           "h": "Finalité",
@@ -346,7 +346,7 @@
         },
         {
           "h": "Vos droits",
-          "p": "Tu peux consulter et modifier tes informations personnelles depuis ton espace client (Paramètres), ou nous écrire à contact@drippy.dz pour toute demande d'accès, de rectification ou de suppression."
+          "p": "Tu peux consulter et modifier tes informations personnelles depuis ton espace client (Paramètres), ou nous écrire à contact@dropix.dz pour toute demande d'accès, de rectification ou de suppression."
         },
         {
           "h": "Cookies",
@@ -361,7 +361,7 @@
       "sections": [
         {
           "h": "Éditeur du site",
-          "p": "Le site Drippy est édité par [Raison sociale / auto-entrepreneur], immatriculé au registre du commerce sous le numéro [N° RC], NIF [N° NIF], dont le siège est situé [adresse complète, wilaya], Algérie. Téléphone : [numéro] — Email : contact@drippy.dz"
+          "p": "Le site Dropix est édité par [Raison sociale / auto-entrepreneur], immatriculé au registre du commerce sous le numéro [N° RC], NIF [N° NIF], dont le siège est situé [adresse complète, wilaya], Algérie. Téléphone : [numéro] — Email : contact@dropix.dz"
         },
         {
           "h": "Directeur de publication",
@@ -373,11 +373,11 @@
         },
         {
           "h": "Propriété intellectuelle",
-          "p": "L'ensemble des contenus du site (textes, visuels, logo, design des presets QR) est la propriété de Drippy. Toute reproduction sans autorisation est interdite."
+          "p": "L'ensemble des contenus du site (textes, visuels, logo, design des presets QR) est la propriété de Dropix. Toute reproduction sans autorisation est interdite."
         },
         {
           "h": "Contact",
-          "p": "Pour toute question : contact@drippy.dz"
+          "p": "Pour toute question : contact@dropix.dz"
         }
       ]
     }
@@ -507,7 +507,7 @@
       "customColor": "Couleur personnalisée",
       "font": "Police",
       "textSize": "Taille",
-      "logoChoice": "Logo Drippy",
+      "logoChoice": "Logo Dropix",
       "logoBadge": "Badge",
       "logoWordmark": "Avec texte",
       "positionCenter": "Centre",
@@ -515,7 +515,7 @@
     },
     "customers": {
       "title": "Clients",
-      "colDrippyId": "ID Drippy",
+      "colDropixId": "ID Dropix",
       "colClient": "Client",
       "colEmail": "Email",
       "colAccount": "Compte",
@@ -649,7 +649,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "subtitle": "Performance globale de Drippy",
+      "subtitle": "Performance globale de Dropix",
       "revenue": "Chiffre d'affaires",
       "confirmedOrders": "commandes confirmées",
       "avgCart": "Panier moyen",
@@ -773,7 +773,7 @@
       "create": "Créer",
       "creating": "Création…",
       "cancel": "Annuler",
-      "colDrippyId": "ID Drippy",
+      "colDropixId": "ID Dropix",
       "colEmail": "Email",
       "colRole": "Rôle",
       "colStatus": "Statut",

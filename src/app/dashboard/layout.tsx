@@ -20,7 +20,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div className="flex min-h-screen">
       <aside className="w-60 bg-bg border-e border-border p-6 hidden md:flex flex-col fixed h-screen">
-        <Link href="/" className="font-heading text-3xl gradient-text">DRIPPY</Link>
+        <Link href="/" className="font-heading text-3xl gradient-text">DROPIX</Link>
         <p className="text-xs text-text-secondary mb-8">{t('customerSpace')}</p>
         <nav className="flex flex-col gap-1 flex-1">
           {links.map((l) => (
@@ -34,7 +34,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </nav>
         <div className="border-t border-border pt-4">
           <div className="text-sm"><div className="text-white font-semibold">{profile.first_name ?? t('client')}</div>
-          <div className="text-text-secondary">{profile.drippy_id}</div></div>
+          <div className="text-text-secondary">{profile.dropix_id}</div></div>
           <form action={logout}>
             <button className="text-red-400 text-sm mt-2 hover:underline">{t('logout')}</button>
           </form>

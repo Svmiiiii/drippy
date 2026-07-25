@@ -20,7 +20,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     const qrCode = data.qr_codes;
     const qrUrl = qrCode ? `${APP_URL}/qr/${qrCode.qr_uid}` : null;
 
-    // The welcome PDF (Drippy ID + temp password) is only ever baked with
+    // The welcome PDF (Dropix ID + temp password) is only ever baked with
     // real credentials into the FIRST order that created this profile —
     // reorders reuse the existing account, so their welcome.pdf shows a
     // placeholder instead (see generateProductionFiles' credentials fallback).

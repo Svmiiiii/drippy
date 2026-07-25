@@ -17,7 +17,7 @@ export interface CartItem {
   logo: { choice: 'badge' | 'wordmark'; position?: 'center' | 'top_left' };
 }
 
-const CART_STORAGE_KEY = 'drippy_cart_v1';
+const CART_STORAGE_KEY = 'dropix_cart_v1';
 
 interface CartContextValue {
   items: CartItem[];

@@ -24,7 +24,7 @@ export default function ForgotPasswordPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-sm text-center">
-        <Link href="/" className="font-heading text-5xl gradient-text">DRIPPY</Link>
+        <Link href="/" className="font-heading text-5xl gradient-text">DROPIX</Link>
         <div className="card mt-8">
           {sent ? (
             <p className="text-text-secondary">{t('forgotPasswordSent', { email })}</p>

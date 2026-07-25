@@ -62,16 +62,16 @@ function textToGlyphPaths(font: Font, text: string, x: number, y: number, fontSi
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
-// Drippy brand logo (garment-face flocking) — recolored to match qr_preset
+// Dropix brand logo (garment-face flocking) — recolored to match qr_preset
 // ──────────────────────────────────────────────────────────────────────────────
 
-// icon-mask.png / drippy-text-mask.png are white silhouettes on transparent
+// icon-mask.png / dropix-text-mask.png are white silhouettes on transparent
 // PNGs, extracted from the source artwork (no vector file was available).
 // Painting a gradient through either via 'dest-in' recolors it exactly like
 // the QR modules above, keeping the flocking file faithful to the live
 // preview (LogoPreview.tsx uses the same PNGs as CSS mask-images).
 const LOGO_ICON_MASK_PATH = path.join(process.cwd(), 'public/logos/icon-mask.png');
-const LOGO_TEXT_MASK_PATH = path.join(process.cwd(), 'public/logos/drippy-text-mask.png');
+const LOGO_TEXT_MASK_PATH = path.join(process.cwd(), 'public/logos/dropix-text-mask.png');
 
 async function recolorMask(maskPath: string, colors: string[]): Promise<Buffer> {
   const meta = await sharp(maskPath).metadata();
@@ -96,7 +96,7 @@ async function generateLogoPng(choice: 'badge' | 'wordmark', colors: string[]): 
   const iconW = iconMeta.width!;
   const iconH = iconMeta.height!;
 
-  // "wordmark" variant: the recolored icon stacked above the "DRIPPY"
+  // "wordmark" variant: the recolored icon stacked above the "DROPIX"
   // wordmark, recolored with the same gradient for a consistent mark.
   const coloredText = await recolorMask(LOGO_TEXT_MASK_PATH, colors);
   const textMeta = await sharp(LOGO_TEXT_MASK_PATH).metadata();
@@ -266,7 +266,7 @@ async function svgToPng(svgString: string): Promise<Buffer> {
 // ──────────────────────────────────────────────────────────────────────────────
 
 async function generateWelcomePdf(opts: {
-  drippyId: string;
+  dropixId: string;
   tempPassword: string;
   qrUrl: string;
   qrUid: string;
@@ -274,7 +274,7 @@ async function generateWelcomePdf(opts: {
   orderNumber: string;
   qrPngBuffer: Buffer;
 }): Promise<Buffer> {
-  const { drippyId, tempPassword, qrUrl, qrUid, customerName, orderNumber, qrPngBuffer } = opts;
+  const { dropixId, tempPassword, qrUrl, qrUid, customerName, orderNumber, qrPngBuffer } = opts;
 
   const doc = await PDFDocument.create();
   const fontBold = await doc.embedFont(StandardFonts.HelveticaBold);
@@ -298,21 +298,21 @@ async function generateWelcomePdf(opts: {
 
   // Header
   page.drawRectangle({ x: 0, y: 792, width: 595, height: 50, color: purple });
-  page.drawText('DRIPPY', { x: 50, y: 810, size: 22, font: fontBold, color: white });
+  page.drawText('DROPIX', { x: 50, y: 810, size: 22, font: fontBold, color: white });
   page.drawText('BIENVENUE DANS TA FAMILLE', { x: 180, y: 814, size: 11, font: fontReg, color: rgb(0.8, 0.6, 1) });
 
   y = 760;
   line(`Bonjour ${customerName} !`, 16, fontBold, white);
   y -= 4;
-  line('Ton Drippy est prêt. Voici tes accès pour gérer ton QR et suivre tes commandes.', 11, fontReg, grey);
+  line('Ton Dropix est prêt. Voici tes accès pour gérer ton QR et suivre tes commandes.', 11, fontReg, grey);
 
   // Credentials box
   y -= 16;
   page.drawRectangle({ x: 40, y: y - 80, width: 515, height: 90, color: rgb(0.07, 0.1, 0.18), borderColor: purple, borderWidth: 1 });
   y -= 8;
-  line('*** TES IDENTIFIANTS DRIPPY ***', 10, fontBold, purple, 55);
+  line('*** TES IDENTIFIANTS DROPIX ***', 10, fontBold, purple, 55);
   y += 4;
-  line(`ID Drippy   :  ${drippyId}`, 13, fontBold, cyan, 55);
+  line(`ID Dropix   :  ${dropixId}`, 13, fontBold, cyan, 55);
   line(`Mot de passe:  ${tempPassword}`, 13, fontBold, pink, 55);
   line(`Email       :  Ton email de commande`, 11, fontReg, grey, 55);
   y -= 8;
@@ -330,7 +330,7 @@ async function generateWelcomePdf(opts: {
 
   // QR section
   y -= 20;
-  line('Ton QR Drippy :', 12, fontBold, white);
+  line('Ton QR Dropix :', 12, fontBold, white);
   const qrSize = 140;
   page.drawImage(pngImage, { x: 50, y: y - qrSize, width: qrSize, height: qrSize });
   page.drawText(`UID : ${qrUid}`, { x: 210, y: y - 30, size: 11, font: fontBold, color: cyan });
@@ -345,10 +345,10 @@ async function generateWelcomePdf(opts: {
   page.drawRectangle({ x: 40, y: y - 36, width: 515, height: 44, color: rgb(0.35, 0.08, 0.08), borderColor: rgb(0.8, 0.2, 0.2), borderWidth: 1 });
   y -= 6;
   line('! SECURITE : Ces identifiants sont personnels et confidentiels.', 10, fontBold, rgb(1, 0.5, 0.5), 55);
-  line('   Ne les partage jamais. Drippy ne te les demandera jamais par email ou téléphone.', 9, fontReg, rgb(1, 0.5, 0.5), 55);
+  line('   Ne les partage jamais. Dropix ne te les demandera jamais par email ou téléphone.', 9, fontReg, rgb(1, 0.5, 0.5), 55);
 
   // Footer
-  page.drawText('Powered by Drippy · drippy.dz', { x: 200, y: 30, size: 9, font: fontReg, color: grey });
+  page.drawText('Powered by Dropix · dropix.dz', { x: 200, y: 30, size: 9, font: fontReg, color: grey });
 
   return Buffer.from(await doc.save());
 }
@@ -379,7 +379,7 @@ async function generateProductionPdf(opts: {
   // Cover page
   const cover = doc.addPage([595, 842]);
   cover.drawRectangle({ x: 0, y: 792, width: 595, height: 50, color: purple });
-  cover.drawText('DRIPPY — FICHE DE PRODUCTION', { x: 50, y: 810, size: 16, font: fontBold, color: white });
+  cover.drawText('DROPIX — FICHE DE PRODUCTION', { x: 50, y: 810, size: 16, font: fontBold, color: white });
   let cy = 760;
   const cl = (text: string, size = 12, font: PDFFont = fontReg, color = white) => {
     cover.drawText(text, { x: 50, y: cy, size, font, color });
@@ -433,7 +433,7 @@ async function generateProductionPdf(opts: {
       const logoDims = logoImg.scale(1);
       const logoW = 110;
       const logoH = logoW * (logoDims.height / logoDims.width);
-      page.drawText('Logo Drippy :', { x: 300, y: y, size: 10, font: fontBold, color: grey });
+      page.drawText('Logo Dropix :', { x: 300, y: y, size: 10, font: fontBold, color: grey });
       page.drawImage(logoImg, { x: 300, y: y - 20 - logoH, width: logoW, height: logoH });
     }
 
@@ -453,7 +453,7 @@ async function generateProductionPdf(opts: {
     check('Contrôle qualité');
 
     // Footer
-    page.drawText('Powered by Drippy', { x: 240, y: 30, size: 8, font: fontReg, color: grey });
+    page.drawText('Powered by Dropix', { x: 240, y: 30, size: 8, font: fontReg, color: grey });
   }
 
   return Buffer.from(await doc.save());
@@ -477,7 +477,7 @@ export interface GenerationResult {
 
 export async function generateProductionFiles(
   orderId: string,
-  credentials?: { drippyId: string; tempPassword: string; customerName: string },
+  credentials?: { dropixId: string; tempPassword: string; customerName: string },
 ): Promise<GenerationResult> {
   const admin = createAdminClient();
 
@@ -571,9 +571,9 @@ export async function generateProductionFiles(
     color: { dark: '#7C3AED', light: '#FFFFFF' },
   });
 
-  const creds = credentials ?? { drippyId: qr.qr_uid, tempPassword: '(voir votre email)', customerName: 'Client' };
+  const creds = credentials ?? { dropixId: qr.qr_uid, tempPassword: '(voir votre email)', customerName: 'Client' };
   const welcomePdf = await generateWelcomePdf({
-    drippyId: creds.drippyId,
+    dropixId: creds.dropixId,
     tempPassword: creds.tempPassword,
     qrUrl, qrUid: qr.qr_uid,
     customerName: creds.customerName,

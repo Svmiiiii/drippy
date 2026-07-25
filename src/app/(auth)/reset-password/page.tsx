@@ -44,7 +44,7 @@ export default function ResetPasswordPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-sm text-center">
-        <Link href="/" className="font-heading text-5xl gradient-text">DRIPPY</Link>
+        <Link href="/" className="font-heading text-5xl gradient-text">DROPIX</Link>
         <Suspense fallback={<div className="mt-8 text-text-secondary">{t('loading')}</div>}><Inner /></Suspense>
       </div>
     </div>

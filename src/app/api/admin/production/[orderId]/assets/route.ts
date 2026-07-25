@@ -19,7 +19,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ ord
     const itemLogoUrls = await Promise.all(
       result.item_logo_paths.map((path) => (path ? getSignedDownloadUrl(path, 3600) : null)),
     );
-    // The partner also needs the customer's ID card (Drippy ID + temp
+    // The partner also needs the customer's ID card (Dropix ID + temp
     // password) so they can ship the finished order straight to them.
     const welcomePdfUrl = result.welcome_pdf_path ? await getSignedDownloadUrl(result.welcome_pdf_path, 3600) : null;
 

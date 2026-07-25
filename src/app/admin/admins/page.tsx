@@ -4,7 +4,7 @@ import { useTranslations, useLocale } from 'next-intl';
 
 interface AdminUser {
   id: string;
-  drippy_id: string;
+  dropix_id: string;
   email: string;
   role: 'admin' | 'super_admin';
   account_status: string;
@@ -100,7 +100,7 @@ export default function AdminAdminsPage() {
           <div className="grid sm:grid-cols-2 gap-4 mb-4">
             <div>
               <label className="text-xs text-text-secondary mb-1 block">{t('email')} *</label>
-              <input type="email" className="input" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="admin@drippy.dz" />
+              <input type="email" className="input" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="admin@dropix.dz" />
             </div>
             <div>
               <label className="text-xs text-text-secondary mb-1 block">{t('role')}</label>
@@ -120,14 +120,14 @@ export default function AdminAdminsPage() {
       <div className="card !p-0 overflow-x-auto">
         <table className="w-full">
           <thead><tr className="border-b border-border">
-            {[t('colDrippyId'), t('colEmail'), t('colRole'), t('colStatus'), t('colCreated'), t('colActions')].map((h) => (
+            {[t('colDropixId'), t('colEmail'), t('colRole'), t('colStatus'), t('colCreated'), t('colActions')].map((h) => (
               <th key={h} className="text-start px-4 py-3 text-xs text-text-secondary uppercase tracking-wide">{h}</th>
             ))}
           </tr></thead>
           <tbody>
             {admins.map((a) => (
               <tr key={a.id} className="border-b border-surface-hover hover:bg-surface-hover">
-                <td className="px-4 py-3 font-heading text-primary text-sm">{a.drippy_id}</td>
+                <td className="px-4 py-3 font-heading text-primary text-sm">{a.dropix_id}</td>
                 <td className="px-4 py-3 text-sm">{a.email}</td>
                 <td className="px-4 py-3">
                   <span className={`badge text-xs ${a.role === 'super_admin' ? 'bg-primary/20 text-primary' : 'bg-blue-500/20 text-blue-300'}`}>

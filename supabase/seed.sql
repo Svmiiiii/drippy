@@ -1,5 +1,5 @@
 -- ============================================================================
--- DRIPPY — SEED DATA
+-- DROPIX — SEED DATA
 -- ============================================================================
 
 insert into products (slug, name, description, price_dzd, status, badge, images) values
@@ -19,5 +19,5 @@ begin
   end loop;
 end $$;
 
--- NOTE: demo auth users (client@drippy.dz / admin@drippy.dz) must be created
+-- NOTE: demo auth users (client@dropix.dz / admin@dropix.dz) must be created
 -- via Supabase Auth, then linked here. See README "Demo accounts".

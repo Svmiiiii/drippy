@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 // Public page hit by scanning a physical QR. Resolves destination,
-// redirects for links or renders a styled message page. Always "Powered by Drippy".
+// redirects for links or renders a styled message page. Always "Powered by Dropix".
 export default async function QrScanPage({ params }: { params: Promise<{ uid: string }> }) {
   const { uid } = await params;
   const admin = createAdminClient();
@@ -27,7 +27,7 @@ export default async function QrScanPage({ params }: { params: Promise<{ uid: st
         <div className="card py-12">
           <p className="text-2xl leading-relaxed">{dest?.target_value ?? 'Bienvenue 👋'}</p>
         </div>
-        <div className="mt-10 text-text-secondary text-xs tracking-widest">POWERED BY DRIPPY</div>
+        <div className="mt-10 text-text-secondary text-xs tracking-widest">POWERED BY DROPIX</div>
       </div>
     </div>
   );
@@ -42,7 +42,7 @@ function Fallback({ title, message }: { title: string; message: string }) {
           <h1 className="text-2xl font-bold mb-2">{title}</h1>
           <p className="text-text-secondary">{message}</p>
         </div>
-        <div className="mt-10 text-text-secondary text-xs tracking-widest">POWERED BY DRIPPY</div>
+        <div className="mt-10 text-text-secondary text-xs tracking-widest">POWERED BY DROPIX</div>
       </div>
     </div>
   );

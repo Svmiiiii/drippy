@@ -1,8 +1,8 @@
 {
-  "name": "drippy",
+  "name": "dropix",
   "version": "1.0.0",
   "private": true,
-  "description": "Drippy — Your QR. Your Story. Streetwear Premium Digital (Algérie V1)",
+  "description": "Dropix — Your QR. Your Story. Streetwear Premium Digital (Algérie V1)",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

@@ -3,9 +3,9 @@
 // ============================================================================
 
 export const colors = {
-  primary: '#7C3AED', // Drippy Purple
-  secondary: '#EC4899', // Drippy Pink
-  accent: '#22D3EE', // Drippy Cyan
+  primary: '#7C3AED', // Dropix Purple
+  secondary: '#EC4899', // Dropix Pink
+  accent: '#22D3EE', // Dropix Cyan
   bg: '#0B0F1A',
   surface: '#131A2A',
   surfaceHover: '#1A2236',

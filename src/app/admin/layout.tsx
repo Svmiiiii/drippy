@@ -26,7 +26,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="flex min-h-screen">
       <aside className="w-60 bg-bg border-e border-border p-6 hidden md:flex flex-col fixed h-screen">
-        <Link href="/" className="font-heading text-3xl gradient-text">DRIPPY</Link>
+        <Link href="/" className="font-heading text-3xl gradient-text">DROPIX</Link>
         <p className="text-[11px] text-primary mb-8 font-semibold tracking-wide">{t('admin').toUpperCase()}</p>
         <nav className="flex flex-col gap-1 flex-1">
           {links.map((l) => (

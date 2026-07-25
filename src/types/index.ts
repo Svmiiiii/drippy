@@ -18,7 +18,7 @@ export interface Product {
 }
 
 export interface Profile {
-  id: string; drippy_id: string; first_name: string | null; last_name: string | null;
+  id: string; dropix_id: string; first_name: string | null; last_name: string | null;
   email: string | null; phone: string | null; role: 'customer' | 'admin' | 'super_admin';
   account_status: 'pending' | 'active' | 'disabled'; language: string;
 }

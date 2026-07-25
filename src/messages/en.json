@@ -8,10 +8,10 @@
   },
   "hero": {
     "badge": "Streetwear × Digital Identity",
-    "cta": "Create my Drippy",
+    "cta": "Create my Dropix",
     "discover": "View collection",
     "description": "Wear your digital identity in the real world. A permanent, unique QR that's yours for life.",
-    "poweredBy": "Powered by Drippy",
+    "poweredBy": "Powered by Dropix",
     "scanExample": "Scan me for a date 😏"
   },
   "home": {
@@ -35,7 +35,7 @@
     "returns": "Returns & refunds",
     "privacy": "Privacy",
     "legal": "Legal notice",
-    "copyright": "© 2026 Drippy DZ · Premium Streetwear · Algeria"
+    "copyright": "© 2026 Dropix DZ · Premium Streetwear · Algeria"
   },
   "common": {
     "save": "Save",
@@ -92,7 +92,7 @@
     "dimensions": "Dimensions",
     "detailsButton": "Details",
     "outOfStock": "Out of stock",
-    "logoChoice": "Drippy logo",
+    "logoChoice": "Dropix logo",
     "logoBadge": "Badge",
     "logoWordmark": "With text",
     "logoPosition": "Logo position",
@@ -264,7 +264,7 @@
       "sections": [
         {
           "h": "1. Purpose",
-          "p": "These terms govern the sale of Drippy products (garments with a permanent, customizable QR code) ordered on drippy.dz, for customers located in Algeria."
+          "p": "These terms govern the sale of Dropix products (garments with a permanent, customizable QR code) ordered on dropix.dz, for customers located in Algeria."
         },
         {
           "h": "2. Price",
@@ -272,7 +272,7 @@
         },
         {
           "h": "3. Order and confirmation",
-          "p": "Orders are placed without creating an account. After the cart is submitted, a Drippy team member calls the customer to confirm the order, delivery address, and total amount before production starts. A customer account (with a unique QR) is created automatically upon confirmation."
+          "p": "Orders are placed without creating an account. After the cart is submitted, a Dropix team member calls the customer to confirm the order, delivery address, and total amount before production starts. A customer account (with a unique QR) is created automatically upon confirmation."
         },
         {
           "h": "4. Payment",
@@ -280,7 +280,7 @@
         },
         {
           "h": "5. QR code customization",
-          "p": "Each item is customized with the style, color, and text chosen by the customer at order time. Once the order is confirmed by the Drippy team, the production sheet is frozen and can no longer be modified (see the Returns & Refunds page for error or defect cases)."
+          "p": "Each item is customized with the style, color, and text chosen by the customer at order time. Once the order is confirmed by the Dropix team, the production sheet is frozen and can no longer be modified (see the Returns & Refunds page for error or defect cases)."
         },
         {
           "h": "6. Delivery",
@@ -292,7 +292,7 @@
         },
         {
           "h": "8. Contact",
-          "p": "For any order-related question: contact@drippy.dz"
+          "p": "For any order-related question: contact@dropix.dz"
         }
       ]
     },
@@ -311,7 +311,7 @@
         },
         {
           "h": "Manufacturing defect",
-          "p": "In case of a proven defect (printing, flocking, non-working QR code), the customer has 7 days after receipt to contact Drippy at contact@drippy.dz with a photo of the defect and their order number. After review, Drippy offers a replacement or a refund."
+          "p": "In case of a proven defect (printing, flocking, non-working QR code), the customer has 7 days after receipt to contact Dropix at contact@dropix.dz with a photo of the defect and their order number. After review, Dropix offers a replacement or a refund."
         },
         {
           "h": "Refund terms",
@@ -319,7 +319,7 @@
         },
         {
           "h": "Contact",
-          "p": "contact@drippy.dz"
+          "p": "contact@dropix.dz"
         }
       ]
     },
@@ -330,7 +330,7 @@
       "sections": [
         {
           "h": "Data collected",
-          "p": "When ordering: name, phone, email, wilaya, commune and delivery address. After order confirmation: a customer account is created (Drippy ID, unique QR). When the QR code is used: scan statistics are recorded in aggregated, anonymized form (device and IP address fingerprint, never the raw IP)."
+          "p": "When ordering: name, phone, email, wilaya, commune and delivery address. After order confirmation: a customer account is created (Dropix ID, unique QR). When the QR code is used: scan statistics are recorded in aggregated, anonymized form (device and IP address fingerprint, never the raw IP)."
         },
         {
           "h": "Purpose",
@@ -346,7 +346,7 @@
         },
         {
           "h": "Your rights",
-          "p": "You can view and edit your personal information from your account area (Settings), or write to contact@drippy.dz for any access, correction, or deletion request."
+          "p": "You can view and edit your personal information from your account area (Settings), or write to contact@dropix.dz for any access, correction, or deletion request."
         },
         {
           "h": "Cookies",
@@ -361,7 +361,7 @@
       "sections": [
         {
           "h": "Site publisher",
-          "p": "The Drippy site is published by [Legal name / sole proprietor], registered with the trade register under number [RC No.], tax ID [NIF No.], headquartered at [full address, wilaya], Algeria. Phone: [number] — Email: contact@drippy.dz"
+          "p": "The Dropix site is published by [Legal name / sole proprietor], registered with the trade register under number [RC No.], tax ID [NIF No.], headquartered at [full address, wilaya], Algeria. Phone: [number] — Email: contact@dropix.dz"
         },
         {
           "h": "Publication director",
@@ -373,11 +373,11 @@
         },
         {
           "h": "Intellectual property",
-          "p": "All site content (text, visuals, logo, QR preset designs) is the property of Drippy. Any reproduction without authorization is prohibited."
+          "p": "All site content (text, visuals, logo, QR preset designs) is the property of Dropix. Any reproduction without authorization is prohibited."
         },
         {
           "h": "Contact",
-          "p": "For any question: contact@drippy.dz"
+          "p": "For any question: contact@dropix.dz"
         }
       ]
     }
@@ -507,7 +507,7 @@
       "customColor": "Custom color",
       "font": "Font",
       "textSize": "Size",
-      "logoChoice": "Drippy logo",
+      "logoChoice": "Dropix logo",
       "logoBadge": "Badge",
       "logoWordmark": "With text",
       "positionCenter": "Center",
@@ -515,7 +515,7 @@
     },
     "customers": {
       "title": "Customers",
-      "colDrippyId": "Drippy ID",
+      "colDropixId": "Dropix ID",
       "colClient": "Customer",
       "colEmail": "Email",
       "colAccount": "Account",
@@ -649,7 +649,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "subtitle": "Drippy's overall performance",
+      "subtitle": "Dropix's overall performance",
       "revenue": "Revenue",
       "confirmedOrders": "confirmed orders",
       "avgCart": "Average cart",
@@ -773,7 +773,7 @@
       "create": "Create",
       "creating": "Creating…",
       "cancel": "Cancel",
-      "colDrippyId": "Drippy ID",
+      "colDropixId": "Dropix ID",
       "colEmail": "Email",
       "colRole": "Role",
       "colStatus": "Status",

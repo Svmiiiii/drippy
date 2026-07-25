@@ -53,7 +53,7 @@ export const orderItemSchema = z.object({
       size: z.number().int().min(60).max(130).optional(),
     })
     .optional(),
-  // Drippy brand logo flocked on the garment face, recolored to match
+  // Dropix brand logo flocked on the garment face, recolored to match
   // qr_style. Position is required except for accessories, where the
   // partner places it — enforced in /api/orders since category lives on
   // the product, not the item.

@@ -3,7 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { okEmpty, fail } from '@/lib/api';
 import { generateProductionFiles } from '@/lib/production';
 
-function generateDrippyId(): string {
+function generateDropixId(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let id = 'DRP-';
   for (let i = 0; i < 6; i++) id += chars[Math.floor(Math.random() * chars.length)];
@@ -30,19 +30,19 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
 
     let profileId: string = order.profile_id;
     let qrId: string;
-    let drippyId: string | undefined;
+    let dropixId: string | undefined;
     let tempPassword: string | undefined;
 
     // 2. CREATE_ACCOUNT if first order
     if (!profileId) {
-      // Generate unique drippy_id
-      let candidate = generateDrippyId();
+      // Generate unique dropix_id
+      let candidate = generateDropixId();
       while (true) {
-        const { data: existing } = await admin.from('profiles').select('id').eq('drippy_id', candidate).maybeSingle();
+        const { data: existing } = await admin.from('profiles').select('id').eq('dropix_id', candidate).maybeSingle();
         if (!existing) break;
-        candidate = generateDrippyId();
+        candidate = generateDropixId();
       }
-      drippyId = candidate;
+      dropixId = candidate;
 
       // Password: 12+ chars, upper + lower + digit (DRP-BUS validation)
       const base = crypto.randomUUID().replace(/-/g, '').slice(0, 9);
@@ -59,7 +59,7 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
         .from('profiles')
         .insert({
           auth_user_id: authUser.user.id,
-          drippy_id: drippyId,
+          dropix_id: dropixId,
           first_name: order.customer_name.split(' ')[0],
           email: order.customer_email,
           phone: order.customer_phone,
@@ -79,7 +79,7 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
       // 3. CREATE_QR (DRP-BUS-001: 1 client = 1 QR permanent)
       const { data: qr, error: qrErr } = await admin
         .from('qr_codes')
-        .insert({ profile_id: profileId, qr_uid: drippyId, qr_status: 'active' })
+        .insert({ profile_id: profileId, qr_uid: dropixId, qr_status: 'active' })
         .select('id')
         .single();
 
@@ -94,7 +94,7 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
       await admin.from('qr_profiles').insert({
         qr_code_id: qrId,
         target_type: 'message',
-        target_value: 'Bienvenue sur mon Drippy !',
+        target_value: 'Bienvenue sur mon Dropix !',
       });
     } else {
       const { data: qr } = await admin.from('qr_codes').select('id').eq('profile_id', profileId).single();
@@ -132,8 +132,8 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
     }
 
     // 8. Generate production files + welcome PDF with credentials (fire-and-forget)
-    generateProductionFiles(orderId, drippyId && tempPassword ? {
-      drippyId,
+    generateProductionFiles(orderId, dropixId && tempPassword ? {
+      dropixId,
       tempPassword,
       customerName: order.customer_name,
     } : undefined).catch((err) => {

@@ -48,14 +48,14 @@ export default function AdminCustomersPage() {
       <div className="card !p-0 overflow-x-auto">
         <table className="w-full">
           <thead><tr className="border-b border-border">
-            {[t('colDrippyId'), t('colClient'), t('colEmail'), t('colAccount'), t('colQr'), t('colActions')].map((h) => (
+            {[t('colDropixId'), t('colClient'), t('colEmail'), t('colAccount'), t('colQr'), t('colActions')].map((h) => (
               <th key={h} className="text-start px-4 py-3 text-xs text-text-secondary uppercase tracking-wide">{h}</th>))}
           </tr></thead>
           <tbody>
             {customers.map((c: any) => (
               <tr key={c.id} className="border-b border-surface-hover hover:bg-surface-hover">
                 <td className="px-4 py-3 font-heading text-primary text-sm">
-                  <button onClick={() => openDetail(c)} className="hover:underline">{c.drippy_id}</button>
+                  <button onClick={() => openDetail(c)} className="hover:underline">{c.dropix_id}</button>
                 </td>
                 <td className="px-4 py-3 font-semibold text-sm">{c.first_name} {c.last_name}</td>
                 <td className="px-4 py-3 text-text-secondary text-sm">{c.email}</td>
@@ -116,7 +116,7 @@ export default function AdminCustomersPage() {
           <div className="card w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between mb-5">
               <div>
-                <div className="font-heading text-2xl text-secondary">{sel.drippy_id}</div>
+                <div className="font-heading text-2xl text-secondary">{sel.dropix_id}</div>
                 <div className="font-semibold">{sel.first_name} {sel.last_name}</div>
               </div>
               <button onClick={() => setSel(null)} className="text-text-secondary">✕</button>

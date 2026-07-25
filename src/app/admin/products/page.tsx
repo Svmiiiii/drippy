@@ -191,7 +191,7 @@ function ProductModal({ product, onClose }: { product?: any; onClose: () => void
         </div>
 
         <label className="text-sm text-text-secondary mb-1.5 block">{t('name')} *</label>
-        <input className="input mb-4" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Drippy Tee Black" />
+        <input className="input mb-4" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Dropix Tee Black" />
 
         <label className="text-sm text-text-secondary mb-1.5 block">{t('description')}</label>
         <textarea className="input mb-4" rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description du produit..." />

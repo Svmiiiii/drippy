@@ -6,10 +6,10 @@ import { Providers } from '@/components/Providers';
 import { getUserLocale } from '@/lib/i18n';
 
 export const metadata: Metadata = {
-  title: 'Drippy — Your QR. Your Story.',
+  title: 'Dropix — Your QR. Your Story.',
   description: 'Streetwear premium avec ton QR Code personnel, unique et permanent. Algérie.',
   openGraph: {
-    title: 'Drippy — Your QR. Your Story.',
+    title: 'Dropix — Your QR. Your Story.',
     description: 'Porte ton identité numérique dans le monde réel.',
   },
   // The site has its own FR/EN/AR switcher — Chrome's auto-translate races

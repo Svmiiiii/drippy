@@ -9,7 +9,7 @@ const createAdminSchema = z.object({
   role: z.enum(['admin', 'super_admin']),
 });
 
-function generateDrippyId(): string {
+function generateDropixId(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let id = 'DRP-';
   for (let i = 0; i < 6; i++) id += chars[Math.floor(Math.random() * chars.length)];
@@ -21,7 +21,7 @@ export async function GET() {
     const { profile, supabase } = await requireAdmin();
     if (profile!.role !== 'super_admin') return fail('FORBIDDEN', undefined, 403);
     const { data } = await supabase.from('profiles')
-      .select('id, drippy_id, email, role, account_status, created_at')
+      .select('id, dropix_id, email, role, account_status, created_at')
       .in('role', ['admin', 'super_admin']).order('created_at', { ascending: false });
     return ok({ items: data ?? [] });
   } catch (e) {
@@ -47,16 +47,16 @@ export async function POST(req: NextRequest) {
     });
     if (authErr) return fail('VALIDATION_ERROR', authErr.message, 422);
 
-    let drippyId = generateDrippyId();
+    let dropixId = generateDropixId();
     while (true) {
-      const { data: existing } = await admin.from('profiles').select('id').eq('drippy_id', drippyId).maybeSingle();
+      const { data: existing } = await admin.from('profiles').select('id').eq('dropix_id', dropixId).maybeSingle();
       if (!existing) break;
-      drippyId = generateDrippyId();
+      dropixId = generateDropixId();
     }
 
     const { error: profileErr } = await admin.from('profiles').insert({
       auth_user_id: authUser.user.id,
-      drippy_id: drippyId,
+      dropix_id: dropixId,
       email: parsed.data.email,
       role: parsed.data.role,
       account_status: 'active',

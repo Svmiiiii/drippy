@@ -150,7 +150,7 @@ export function Customizer({ product }: { product: Product }) {
           </div>
         </div>
 
-        {/* DRIPPY LOGO — flocked on the garment face, recolored to match the QR style above */}
+        {/* DROPIX LOGO — flocked on the garment face, recolored to match the QR style above */}
         <div className="mt-10 pt-10 border-t border-border">
           <label className="label-luxe mb-3 block">{t('logoChoice')}</label>
           <div className="flex gap-4">
