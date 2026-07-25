@@ -594,6 +594,7 @@
       "colorsHint": "Chaque couleur a sa propre photo — le client verra le rendu du QR sur la bonne photo selon la couleur choisie.",
       "colorNamePlaceholder": "Nom de la couleur (ex : Noir)",
       "colorImage": "Photo de la couleur",
+      "replaceImage": "Remplacer la photo",
       "addColor": "+ Ajouter",
       "previewColor": "Aperçu couleur {color}",
       "dimensions": "Dimensions",

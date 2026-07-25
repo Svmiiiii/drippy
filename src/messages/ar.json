@@ -594,6 +594,7 @@
       "colorsHint": "لكل لون صورته الخاصة — سيرى العميل نتيجة رمز QR على الصورة الصحيحة حسب اللون الذي يختاره.",
       "colorNamePlaceholder": "اسم اللون (مثال: أسود)",
       "colorImage": "صورة اللون",
+      "replaceImage": "استبدال الصورة",
       "addColor": "+ إضافة",
       "previewColor": "معاينة اللون {color}",
       "dimensions": "المقاسات",

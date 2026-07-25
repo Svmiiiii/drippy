@@ -594,6 +594,7 @@
       "colorsHint": "Each color has its own photo — the customer will see the QR rendered on the right photo for the color they pick.",
       "colorNamePlaceholder": "Color name (e.g. Black)",
       "colorImage": "Color photo",
+      "replaceImage": "Replace photo",
       "addColor": "+ Add",
       "previewColor": "Preview {color}",
       "dimensions": "Dimensions",

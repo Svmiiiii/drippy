@@ -47,6 +47,7 @@ function ProductModal({ product, onClose }: { product?: any; onClose: () => void
   const [newColorHex, setNewColorHex] = useState('#000000');
   const [newColorImage, setNewColorImage] = useState<string | null>(null);
   const [uploadingColorImage, setUploadingColorImage] = useState(false);
+  const [replacingColorImage, setReplacingColorImage] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -80,6 +81,24 @@ function ProductModal({ product, onClose }: { product?: any; onClose: () => void
     setPreviewColor((prev) => prev ?? name);
     setNewColorName('');
     setNewColorImage(null);
+  }
+
+  async function replaceColorImage(name: string, file: File | undefined) {
+    if (!file) return;
+    setReplacingColorImage(name);
+    setError('');
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/admin/products/upload', { method: 'POST', body: fd });
+      const json = await res.json();
+      if (json.success) setColors((prev) => prev.map((c) => (c.name === name ? { ...c, image: json.data.url } : c)));
+      else setError(json.error?.message ?? t('error'));
+    } catch {
+      setError(t('networkError'));
+    } finally {
+      setReplacingColorImage(null);
+    }
   }
 
   function removeColor(name: string) {
@@ -231,6 +250,12 @@ function ProductModal({ product, onClose }: { product?: any; onClose: () => void
                 className={`relative rounded-xl border p-2 transition ${previewColor === c.name ? 'border-secondary bg-secondary/10' : 'border-border'} ${!c.available ? 'opacity-60' : ''}`}>
                 <button type="button" onClick={() => removeColor(c.name)}
                   className="absolute top-1 end-1 w-5 h-5 rounded-full bg-black/50 text-white text-xs flex items-center justify-center z-10">✕</button>
+                <label title={t('replaceImage')}
+                  className={`absolute top-1 start-1 w-5 h-5 rounded-full bg-black/50 text-white text-xs flex items-center justify-center z-10 ${replacingColorImage === c.name ? 'opacity-60' : 'cursor-pointer hover:bg-black/70'}`}>
+                  {replacingColorImage === c.name ? '…' : '📷'}
+                  <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" className="hidden"
+                    disabled={replacingColorImage === c.name} onChange={(e) => replaceColorImage(c.name, e.target.files?.[0])} />
+                </label>
                 <button type="button" onClick={() => setPreviewColor(c.name)} className="w-full text-start">
                   <img src={c.image} alt="" className="w-full h-16 rounded-lg object-cover mb-1.5" />
                   <div className="flex items-center gap-1.5 mb-1.5">
