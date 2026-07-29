@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { QrCode } from './QrCode';
 import type { PrintArea } from '@/types';
@@ -57,7 +58,7 @@ export function ProductQrPreview({
       className={`relative w-full aspect-square rounded-2xl overflow-hidden bg-[#0E1320] ${editable ? 'cursor-crosshair' : ''}`}
     >
       {imageUrl ? (
-        <img src={imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
+        <Image src={imageUrl} alt="" fill sizes="(min-width: 768px) 448px, 100vw" className="object-cover pointer-events-none" />
       ) : (
         <div className="absolute inset-0 flex items-center justify-center text-8xl pointer-events-none">👕</div>
       )}

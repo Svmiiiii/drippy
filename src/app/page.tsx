@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { Navbar } from '@/components/Navbar';
@@ -100,7 +101,9 @@ export default async function HomePage() {
               <Link key={p.id} href={`/product/${p.slug}`} className="card !p-0 overflow-hidden hover:border-primary hover:-translate-y-1 transition block">
                 <div className="h-52 bg-[#0E1320] flex items-center justify-center text-7xl relative">
                   {p.images?.[0]?.startsWith('http') ? (
-                    <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover" />
+                    <Image src={p.images[0]} alt={p.name} fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover" />
                   ) : '👕'}
                   {p.badge && <span className="badge bg-secondary/20 text-pink-300 absolute top-3 end-3">{p.badge}</span>}
                 </div>

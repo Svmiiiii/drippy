@@ -1,5 +1,6 @@
 'use client';
 import { useState, useMemo } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { formatDZD } from '@/lib/utils';
@@ -114,8 +115,9 @@ export function ShopClient({ products }: { products: Product[] }) {
               <div className="group">
                 <div className="aspect-[4/5] bg-[#0E1320] relative overflow-hidden rounded-[4px]">
                   {p.images?.[0]?.startsWith('http') ? (
-                    <img src={p.images[0]} alt={p.name}
-                      className={`w-full h-full object-cover transition duration-700 ${out ? 'opacity-40' : 'group-hover:scale-[1.04]'}`} />
+                    <Image src={p.images[0]} alt={p.name} fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className={`object-cover transition duration-700 ${out ? 'opacity-40' : 'group-hover:scale-[1.04]'}`} />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-8xl">👕</div>
                   )}

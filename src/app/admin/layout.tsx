@@ -5,14 +5,17 @@ import { getAuthProfile } from '@/lib/auth';
 import { logout } from '@/lib/actions';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { profile } = await getAuthProfile();
+  const { profile, supabase } = await getAuthProfile();
   if (!profile) redirect('/login');
   if (!['admin', 'super_admin'].includes(profile.role)) redirect('/dashboard');
   const t = await getTranslations('admin.nav');
 
-  const links = [
+  const { count: pendingCount } = await supabase
+    .from('orders').select('id', { count: 'exact', head: true }).eq('status', 'pending_confirmation');
+
+  const links: { href: string; label: string; icon: string; badge?: number }[] = [
     { href: '/admin', label: t('dashboard'), icon: '📊' },
-    { href: '/admin/orders', label: t('orders'), icon: '📋' },
+    { href: '/admin/orders', label: t('orders'), icon: '📋', badge: pendingCount ?? 0 },
     { href: '/admin/customers', label: t('customers'), icon: '👥' },
     { href: '/admin/products', label: t('products'), icon: '👕' },
     { href: '/admin/production', label: t('production'), icon: '⚙' },
@@ -32,6 +35,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           {links.map((l) => (
             <Link key={l.href} href={l.href} className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-text-secondary hover:text-white hover:bg-surface-hover transition">
               <span>{l.icon}</span> {l.label}
+              {!!l.badge && (
+                <span className="ms-auto bg-gradient-neon text-white text-[11px] font-bold rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center">
+                  {l.badge}
+                </span>
+              )}
             </Link>
           ))}
         </nav>

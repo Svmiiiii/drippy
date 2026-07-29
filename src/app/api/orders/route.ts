@@ -5,7 +5,7 @@ import { createOrderSchema } from '@/lib/validation';
 import { nextOrderNumber } from '@/lib/orders';
 import { getShippingFee } from '@/lib/design';
 import { checkOrderRateLimit, getRequestIp } from '@/lib/rateLimit';
-import { sendOrderReceivedEmail } from '@/lib/email';
+import { sendOrderReceivedEmail, sendAdminNewOrderNotification } from '@/lib/email';
 import { getUserLocale } from '@/lib/i18n';
 
 // DRP-WF-VIS-007 — creates an order in pending_confirmation.
@@ -127,6 +127,15 @@ export async function POST(req: NextRequest) {
     totalDzd: total,
     language,
   }).catch((err) => console.error('[orders] confirmation email failed:', err));
+
+  (async () => {
+    const { data: admins } = await admin.from('profiles').select('email')
+      .in('role', ['admin', 'super_admin']).eq('account_status', 'active');
+    await sendAdminNewOrderNotification({
+      to: (admins ?? []).map((a) => a.email).filter(Boolean),
+      orderNumber, customerName: body.customer_name, customerPhone: body.customer_phone, totalDzd: total,
+    });
+  })().catch((err) => console.error('[orders] admin notification failed:', err));
 
   return ok({ order_id: order.id, order_number: orderNumber, status: 'pending_confirmation' });
 }

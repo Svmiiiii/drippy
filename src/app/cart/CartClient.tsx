@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -35,9 +36,9 @@ export function CartClient() {
           const presetColors = getQrColors(item.preset, item.qrColor);
           return (
             <div key={item.id} className="flex gap-5 pb-8 border-b border-border">
-              <div className="w-24 h-28 shrink-0 bg-[#0E1320] rounded-sm overflow-hidden">
+              <div className="relative w-24 h-28 shrink-0 bg-[#0E1320] rounded-sm overflow-hidden">
                 {item.image?.startsWith('http') && (
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                  <Image src={item.image} alt={item.name} fill sizes="96px" className="object-cover" />
                 )}
               </div>
               <div className="flex-1 min-w-0">

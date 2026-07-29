@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useCart } from '@/components/CartProvider';
@@ -22,6 +23,7 @@ function CheckoutForm() {
   const [promoLoading, setPromoLoading] = useState(false);
   const [promoError, setPromoError] = useState('');
 
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [step, setStep] = useState<'form' | 'code'>('form');
   const [code, setCode] = useState('');
   const [codeError, setCodeError] = useState('');
@@ -52,6 +54,7 @@ function CheckoutForm() {
     if (!form.wilaya) e.wilaya = t('errorWilayaRequired');
     if (!form.commune.trim()) e.commune = t('errorCommuneRequired');
     if (!form.address.trim()) e.address = t('errorAddressRequired');
+    if (!acceptTerms) e.terms = t('errorTermsRequired');
     setErrors(e);
     return Object.keys(e).length === 0;
   }
@@ -272,6 +275,15 @@ function CheckoutForm() {
           {promoError && <p className="text-red-400 text-xs mt-1">{promoError}</p>}
         </div>
       </div>
+
+      <label className="flex items-start gap-2 text-sm text-text-secondary mb-4">
+        <input
+          type="checkbox" checked={acceptTerms} className="mt-0.5"
+          onChange={(e) => { setAcceptTerms(e.target.checked); setErrors({ ...errors, terms: '' }); }}
+        />
+        <span>{t('acceptTermsPrefix')} <Link href="/cgv" target="_blank" className="text-primary underline">{t('acceptTermsLink')}</Link></span>
+      </label>
+      {errors.terms && <p className="text-red-400 text-xs mb-2">{errors.terms}</p>}
 
       {errors.form && <p className="text-red-400 text-sm mb-4">{errors.form}</p>}
       <button onClick={requestCode} disabled={sendingCode || submitting} className="btn-primary w-full justify-center !py-4 !text-base disabled:opacity-60">

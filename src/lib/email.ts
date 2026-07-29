@@ -254,3 +254,31 @@ export async function sendCheckoutVerificationCode(params: { to: string; code: s
     `),
   });
 }
+
+// ─── Admin: new order alert ─────────────────────────────────────────────────
+// The admin panel has no push notifications, so a new pending order is
+// otherwise invisible until someone happens to open /admin/orders — this is
+// the only thing that actively tells the team a customer is waiting to be
+// called (DRP-WF-ADM: phone confirmation drives the whole flow).
+
+export async function sendAdminNewOrderNotification(params: {
+  to: string[];
+  orderNumber: string;
+  customerName: string;
+  customerPhone: string;
+  totalDzd: number;
+}) {
+  if (params.to.length === 0) return;
+  await sendMail({
+    from: FROM,
+    to: params.to,
+    subject: `🛎️ Nouvelle commande ${params.orderNumber} — à confirmer par téléphone`,
+    html: wrap('fr', `
+      <h2>Nouvelle commande reçue</h2>
+      <p><strong>${params.orderNumber}</strong> — ${params.customerName}</p>
+      <p>Téléphone : <strong>${params.customerPhone}</strong></p>
+      <p>Total : <strong>${formatDZD(params.totalDzd)}</strong></p>
+      <p>À confirmer par téléphone dans l'admin dès que possible.</p>
+    `),
+  });
+}
