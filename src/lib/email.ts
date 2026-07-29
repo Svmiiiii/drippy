@@ -19,6 +19,16 @@ function firstName(fullName: string): string {
   return fullName.split(' ')[0];
 }
 
+// The Resend SDK resolves (doesn't reject) on API-level failures like an
+// unverified sending domain — it returns { error } instead of throwing. A
+// bare `await resend.emails.send(...)` inside a try/catch therefore never
+// catches those failures, silently dropping the email. Route every send
+// through here so callers' try/catch (or .catch()) actually fires.
+async function sendMail(params: Parameters<typeof resend.emails.send>[0]) {
+  const { error } = await resend.emails.send(params);
+  if (error) throw new Error(`[resend] ${error.name}: ${error.message}`);
+}
+
 // ─── Order received (checkout) ──────────────────────────────────────────────
 
 const RECEIVED_STRINGS: Record<Locale, { subject: (o: string) => string; greeting: (n: string) => string; body: (o: string) => string; total: string; cod: string; willCall: string }> = {
@@ -59,7 +69,7 @@ export async function sendOrderReceivedEmail(params: {
   const s = RECEIVED_STRINGS[params.language] ?? RECEIVED_STRINGS.fr;
   const itemsHtml = params.items.map((i) => `<li>${i.quantity} × ${i.name}</li>`).join('');
   try {
-    await resend.emails.send({
+    await sendMail({
       from: FROM,
       to: params.to,
       subject: s.subject(params.orderNumber),
@@ -102,7 +112,7 @@ const IN_PRODUCTION_STRINGS: Record<Locale, { subject: (o: string) => string; gr
 export async function sendOrderInProductionEmail(params: { to: string; orderNumber: string; customerName: string; language: Locale }) {
   const s = IN_PRODUCTION_STRINGS[params.language] ?? IN_PRODUCTION_STRINGS.fr;
   try {
-    await resend.emails.send({
+    await sendMail({
       from: FROM,
       to: params.to,
       subject: s.subject(params.orderNumber),
@@ -140,7 +150,7 @@ const IN_TRANSIT_STRINGS: Record<Locale, { subject: (o: string) => string; greet
 export async function sendOrderInTransitEmail(params: { to: string; orderNumber: string; customerName: string; language: Locale }) {
   const s = IN_TRANSIT_STRINGS[params.language] ?? IN_TRANSIT_STRINGS.fr;
   try {
-    await resend.emails.send({
+    await sendMail({
       from: FROM,
       to: params.to,
       subject: s.subject(params.orderNumber),
@@ -186,7 +196,7 @@ export async function sendOrderDeliveredEmail(params: {
 }) {
   const s = DELIVERED_STRINGS[params.language] ?? DELIVERED_STRINGS.fr;
   try {
-    await resend.emails.send({
+    await sendMail({
       from: FROM,
       to: params.to,
       subject: s.subject(params.orderNumber),
@@ -232,7 +242,7 @@ const VERIFY_CODE_STRINGS: Record<Locale, { subject: string; greeting: string; b
 
 export async function sendCheckoutVerificationCode(params: { to: string; code: string; language: Locale }) {
   const s = VERIFY_CODE_STRINGS[params.language] ?? VERIFY_CODE_STRINGS.fr;
-  await resend.emails.send({
+  await sendMail({
     from: FROM,
     to: params.to,
     subject: s.subject,
