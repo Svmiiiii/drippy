@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useCart } from '@/components/CartProvider';
@@ -22,6 +22,19 @@ function CheckoutForm() {
   const [promoLoading, setPromoLoading] = useState(false);
   const [promoError, setPromoError] = useState('');
 
+  const [step, setStep] = useState<'form' | 'code'>('form');
+  const [code, setCode] = useState('');
+  const [codeError, setCodeError] = useState('');
+  const [sendingCode, setSendingCode] = useState(false);
+  const [verifyingCode, setVerifyingCode] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const id = setInterval(() => setCooldown((c) => Math.max(0, c - 1)), 1000);
+    return () => clearInterval(id);
+  }, [cooldown]);
+
   if (items.length === 0 && !done) {
     return <div className="max-w-xl mx-auto px-6 py-20 text-center text-text-secondary">{t('noConfig')} <a href="/shop" className="text-primary">{t('backToShop')}</a></div>;
   }
@@ -30,6 +43,62 @@ function CheckoutForm() {
   const shipping = getShippingFee(form.wilaya);
   const discount = promoApplied?.discount_dzd ?? 0;
   const total = Math.max(0, subtotal + (form.wilaya ? shipping : 0) - discount);
+
+  function validateForm(): boolean {
+    const e: Record<string, string> = {};
+    if (!form.name.trim()) e.name = t('errorNameRequired');
+    if (!/^0[5-7]\d{8}$/.test(form.phone)) e.phone = t('errorInvalidPhone');
+    if (!/\S+@\S+\.\S+/.test(form.email)) e.email = t('errorInvalidEmail');
+    if (!form.wilaya) e.wilaya = t('errorWilayaRequired');
+    if (!form.commune.trim()) e.commune = t('errorCommuneRequired');
+    if (!form.address.trim()) e.address = t('errorAddressRequired');
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  }
+
+  async function requestCode() {
+    if (!validateForm()) return;
+    setSendingCode(true);
+    setErrors((prev) => ({ ...prev, form: '' }));
+    try {
+      const res = await fetch('/api/checkout/send-code', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setStep('code'); setCode(''); setCodeError(''); setCooldown(60);
+      } else {
+        setErrors({ form: json.error?.message ?? t('errorSendCode') });
+      }
+    } catch {
+      setErrors({ form: t('errorSendCode') });
+    } finally {
+      setSendingCode(false);
+    }
+  }
+
+  async function verifyCode() {
+    if (code.length !== 6) { setCodeError(t('errorInvalidCode')); return; }
+    setVerifyingCode(true); setCodeError('');
+    try {
+      const res = await fetch('/api/checkout/verify-code', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email, code }),
+      });
+      const json = await res.json();
+      if (json.success) await createOrder();
+      else setCodeError(json.error?.message ?? t('errorInvalidCode'));
+    } catch {
+      setCodeError(t('errorInvalidCode'));
+    } finally {
+      setVerifyingCode(false);
+    }
+  }
+
+  function backToForm() {
+    setStep('form'); setCode(''); setCodeError('');
+  }
 
   async function applyPromo() {
     if (!promoCode.trim()) return;
@@ -43,16 +112,7 @@ function CheckoutForm() {
     finally { setPromoLoading(false); }
   }
 
-  async function submit() {
-    const e: Record<string, string> = {};
-    if (!form.name.trim()) e.name = t('errorNameRequired');
-    if (!/^0[5-7]\d{8}$/.test(form.phone)) e.phone = t('errorInvalidPhone');
-    if (!/\S+@\S+\.\S+/.test(form.email)) e.email = t('errorInvalidEmail');
-    if (!form.wilaya) e.wilaya = t('errorWilayaRequired');
-    if (!form.commune.trim()) e.commune = t('errorCommuneRequired');
-    if (!form.address.trim()) e.address = t('errorAddressRequired');
-    if (Object.keys(e).length) { setErrors(e); return; }
-
+  async function createOrder() {
     setSubmitting(true);
     try {
       const res = await fetch('/api/orders', {
@@ -72,8 +132,9 @@ function CheckoutForm() {
       });
       const json = await res.json();
       if (json.success) { setDone({ number: json.data.order_number }); clear(); }
-      else setErrors({ form: json.error?.message ?? t('errorInvalidPromo') });
+      else { setStep('form'); setErrors({ form: json.error?.message ?? t('errorInvalidPromo') }); }
     } catch {
+      setStep('form');
       setErrors({ form: t('errorInvalidPromo') });
     } finally {
       setSubmitting(false);
@@ -93,6 +154,35 @@ function CheckoutForm() {
           💡 {t('codBanner')}
         </div>
         <button onClick={() => router.push('/')} className="btn-primary">{t('backHome')}</button>
+      </div>
+    );
+  }
+
+  if (step === 'code') {
+    return (
+      <div className="max-w-md mx-auto px-6 py-20 text-center">
+        <div className="text-5xl mb-6">📧</div>
+        <h1 className="font-heading text-3xl mb-3">{t('verifyEmailTitle')}</h1>
+        <p className="text-text-secondary mb-8">{t('verifyEmailHint', { email: form.email })}</p>
+        <input
+          className="input text-center text-2xl tracking-[0.4em] font-heading"
+          maxLength={6} inputMode="numeric" placeholder="123456"
+          value={code}
+          onChange={(e) => { setCode(e.target.value.replace(/\D/g, '').slice(0, 6)); setCodeError(''); }}
+          onKeyDown={(e) => e.key === 'Enter' && verifyCode()}
+        />
+        {codeError && <p className="text-red-400 text-sm mt-2">{codeError}</p>}
+
+        <button onClick={verifyCode} disabled={verifyingCode} className="btn-primary w-full justify-center !py-4 !text-base disabled:opacity-60 mt-6">
+          {verifyingCode ? t('verifying') : t('verifyButton')}
+        </button>
+
+        <div className="flex justify-between items-center mt-5 text-sm">
+          <button onClick={backToForm} className="text-text-secondary hover:text-white transition">{t('changeEmail')}</button>
+          <button onClick={requestCode} disabled={cooldown > 0 || sendingCode} className="text-text-secondary hover:text-white transition disabled:opacity-40">
+            {cooldown > 0 ? t('resendIn', { s: cooldown }) : t('resendCode')}
+          </button>
+        </div>
       </div>
     );
   }
@@ -184,8 +274,8 @@ function CheckoutForm() {
       </div>
 
       {errors.form && <p className="text-red-400 text-sm mb-4">{errors.form}</p>}
-      <button onClick={submit} disabled={submitting} className="btn-primary w-full justify-center !py-4 !text-base disabled:opacity-60">
-        {submitting ? t('sending') : `${t('confirmOrder')} →`}
+      <button onClick={requestCode} disabled={sendingCode || submitting} className="btn-primary w-full justify-center !py-4 !text-base disabled:opacity-60">
+        {sendingCode ? t('sendingCode') : `${t('receiveCode')} →`}
       </button>
     </div>
   );

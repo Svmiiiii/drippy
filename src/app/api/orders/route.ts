@@ -20,6 +20,22 @@ export async function POST(req: NextRequest) {
   const allowed = await checkOrderRateLimit(admin, getRequestIp(req));
   if (!allowed) return fail('RATE_LIMITED', undefined, 429);
 
+  // Defense in depth: the checkout UI always runs send-code/verify-code
+  // first, but this stops a direct API call from skipping that gate.
+  const VERIFICATION_WINDOW_MS = 30 * 60_000;
+  const { data: verification } = await admin
+    .from('checkout_email_verifications')
+    .select('created_at, verified')
+    .eq('email', body.customer_email.toLowerCase())
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const isVerified = !!verification?.verified
+    && Date.now() - new Date(verification.created_at).getTime() < VERIFICATION_WINDOW_MS;
+  if (!isVerified) {
+    return fail('EMAIL_NOT_VERIFIED', "Merci de vérifier ton email avant de valider la commande", 422);
+  }
+
   // price + stock check
   const ids = body.items.map((i) => i.product_id);
   const { data: products } = await admin.from('products').select('id, price_dzd, status, name, category').in('id', ids);

@@ -63,6 +63,9 @@ export const orderItemSchema = z.object({
   }),
 });
 
+export const sendCheckoutCodeSchema = z.object({ email: emailSchema });
+export const verifyCheckoutCodeSchema = z.object({ email: emailSchema, code: z.string().length(6) });
+
 export const createOrderSchema = z.object({
   customer_name: z.string().min(1),
   customer_phone: phoneSchema,

@@ -65,6 +65,10 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
           phone: order.customer_phone,
           role: 'customer',
           account_status: 'active',
+          // The checkout email-verification code gate (checkout_email_verifications)
+          // already proved this address at order time — no separate first-login
+          // verification step is needed.
+          email_verified: true,
           language: order.language ?? 'fr',
         })
         .select('id')

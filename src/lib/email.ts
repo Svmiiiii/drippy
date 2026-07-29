@@ -203,3 +203,44 @@ export async function sendOrderDeliveredEmail(params: {
     console.error('[email] order delivered notice failed:', err);
   }
 }
+
+// ─── Checkout email verification code ───────────────────────────────────────
+// Unlike the notices above, this one must actually reach the inbox before the
+// customer can proceed — callers should NOT fire-and-forget this, and should
+// surface a failure to the UI instead of swallowing it.
+
+const VERIFY_CODE_STRINGS: Record<Locale, { subject: string; greeting: string; body: string; expiry: string }> = {
+  fr: {
+    subject: 'Ton code de vérification — Dropix',
+    greeting: 'Confirme ton adresse email',
+    body: "Voici ton code pour valider ta commande :",
+    expiry: 'Ce code expire dans 10 minutes.',
+  },
+  en: {
+    subject: 'Your verification code — Dropix',
+    greeting: 'Confirm your email address',
+    body: 'Here is your code to validate your order:',
+    expiry: 'This code expires in 10 minutes.',
+  },
+  ar: {
+    subject: 'رمز التحقق الخاص بك — Dropix',
+    greeting: 'أكّد عنوان بريدك الإلكتروني',
+    body: 'إليك رمزك لتأكيد طلبك:',
+    expiry: 'تنتهي صلاحية هذا الرمز خلال 10 دقائق.',
+  },
+};
+
+export async function sendCheckoutVerificationCode(params: { to: string; code: string; language: Locale }) {
+  const s = VERIFY_CODE_STRINGS[params.language] ?? VERIFY_CODE_STRINGS.fr;
+  await resend.emails.send({
+    from: FROM,
+    to: params.to,
+    subject: s.subject,
+    html: wrap(params.language, `
+      <h2>${s.greeting}</h2>
+      <p>${s.body}</p>
+      <p style="font-size:32px;font-weight:bold;letter-spacing:8px;margin:16px 0;">${params.code}</p>
+      <p style="color:#888;font-size:13px;">${s.expiry}</p>
+    `),
+  });
+}
