@@ -121,12 +121,16 @@ function ProductModal({ product, onClose }: { product?: any; onClose: () => void
 
   const previewImageUrl = colors.find((c) => c.name === previewColor)?.image ?? images[0] ?? null;
 
+  const MAX_PHOTOS = 8;
+
   async function handleFiles(files: FileList | null) {
     if (!files || files.length === 0) return;
+    const remaining = MAX_PHOTOS - images.length;
+    const toUpload = Array.from(files).slice(0, remaining);
     setUploading(true);
-    setError('');
+    setError(files.length > remaining ? t('maxPhotosReached', { max: MAX_PHOTOS }) : '');
     try {
-      for (const file of Array.from(files)) {
+      for (const file of toUpload) {
         const fd = new FormData();
         fd.append('file', file);
         const res = await fetch('/api/admin/products/upload', { method: 'POST', body: fd });
@@ -171,6 +175,7 @@ function ProductModal({ product, onClose }: { product?: any; onClose: () => void
     if (!form.name.trim()) { setError(t('nameRequired')); return; }
     if (!price || price < 0) { setError(t('invalidPrice')); return; }
     if (sizeType === 'multiple' && sizes.length === 0) { setError(t('selectSize')); return; }
+    if (images.length > MAX_PHOTOS) { setError(t('maxPhotosReached', { max: MAX_PHOTOS })); return; }
     setLoading(true);
     setError('');
     try {
@@ -288,7 +293,7 @@ function ProductModal({ product, onClose }: { product?: any; onClose: () => void
           <button type="button" onClick={addColor} disabled={!newColorName.trim() || !newColorImage} className="btn-secondary !px-4 shrink-0 disabled:opacity-50">{t('addColor')}</button>
         </div>
 
-        <label className="text-sm text-text-secondary mb-2 block">{t('photos')}</label>
+        <label className="text-sm text-text-secondary mb-2 block">{t('photos')} ({images.length}/{MAX_PHOTOS})</label>
         {images.length > 0 && (
           <div className="flex gap-2 flex-wrap mb-2">
             {images.map((url) => (
@@ -300,11 +305,15 @@ function ProductModal({ product, onClose }: { product?: any; onClose: () => void
             ))}
           </div>
         )}
-        <label className={`inline-block px-3 py-2 rounded-lg border border-border text-sm text-text-secondary hover:text-white transition mb-6 ${uploading ? 'opacity-60' : 'cursor-pointer'}`}>
-          {uploading ? t('uploading') : t('addPhotos')}
-          <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple className="hidden"
-            disabled={uploading} onChange={(e) => handleFiles(e.target.files)} />
-        </label>
+        {images.length < MAX_PHOTOS ? (
+          <label className={`inline-block px-3 py-2 rounded-lg border border-border text-sm text-text-secondary hover:text-white transition mb-6 ${uploading ? 'opacity-60' : 'cursor-pointer'}`}>
+            {uploading ? t('uploading') : t('addPhotos')}
+            <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple className="hidden"
+              disabled={uploading} onChange={(e) => handleFiles(e.target.files)} />
+          </label>
+        ) : (
+          <p className="text-text-secondary text-xs mb-6">{t('maxPhotosReached', { max: MAX_PHOTOS })}</p>
+        )}
 
         {previewImageUrl && (
           <>

@@ -574,6 +574,7 @@
       "status": "Statut",
       "photos": "Photos",
       "addPhotos": "+ Ajouter des photos",
+      "maxPhotosReached": "Maximum {max} photos atteint — retire-en une pour en ajouter une autre",
       "uploading": "Envoi...",
       "printZone": "Emplacement du QR sur la photo",
       "qrSize": "Taille du QR",

@@ -574,6 +574,7 @@
       "status": "Status",
       "photos": "Photos",
       "addPhotos": "+ Add photos",
+      "maxPhotosReached": "Maximum {max} photos reached — remove one to add another",
       "uploading": "Uploading...",
       "printZone": "QR placement on photo",
       "qrSize": "QR size",

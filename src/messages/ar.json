@@ -574,6 +574,7 @@
       "status": "الحالة",
       "photos": "الصور",
       "addPhotos": "+ إضافة صور",
+      "maxPhotosReached": "تم بلوغ الحد الأقصى ({max} صور) — احذف واحدة لإضافة أخرى",
       "uploading": "جارٍ الرفع...",
       "printZone": "موضع رمز QR على الصورة",
       "qrSize": "حجم رمز QR",
