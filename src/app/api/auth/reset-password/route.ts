@@ -8,12 +8,11 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) return failValidation(parsed.error);
 
   const supabase = await createClient();
-  // Exchange the recovery token to establish a session before calling updateUser.
-  const { error: otpError } = await supabase.auth.verifyOtp({
-    token_hash: parsed.data.token,
-    type: 'recovery',
-  });
-  if (otpError) return fail('TOKEN_EXPIRED', otpError.message, 400);
+  // The Supabase client is configured for the PKCE flow (@supabase/ssr default),
+  // so the recovery link carries a `code` param exchanged this way — not the
+  // older `token_hash` + verifyOtp() pattern.
+  const { error: codeError } = await supabase.auth.exchangeCodeForSession(parsed.data.code);
+  if (codeError) return fail('TOKEN_EXPIRED', codeError.message, 400);
   const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
   if (error) return fail('TOKEN_EXPIRED', error.message, 400);
   return okEmpty();

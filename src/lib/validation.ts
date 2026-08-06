@@ -26,11 +26,11 @@ export const loginSchema = z.object({
 export const forgotPasswordSchema = z.object({ email: emailSchema });
 
 export const resetPasswordSchema = z.object({
-  token: z.string().min(1),
+  code: z.string().min(1),
   password: passwordSchema,
 });
 
-export const verifyEmailSchema = z.object({ token: z.string().min(1) });
+export const verifyEmailSchema = z.object({ code: z.string().min(1) });
 
 // ─── ORDERS ─────────────────────────────────────────────────────────────────
 export const orderItemSchema = z.object({

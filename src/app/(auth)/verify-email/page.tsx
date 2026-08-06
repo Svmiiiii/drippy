@@ -12,7 +12,7 @@ function Inner() {
   useEffect(() => {
     fetch('/api/auth/verify-email', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: sp.get('token') ?? '' }),
+      body: JSON.stringify({ code: sp.get('code') ?? '' }),
     })
       .then((r) => r.json())
       .then((j) => setStatus(j.success ? 'ok' : 'fail'))

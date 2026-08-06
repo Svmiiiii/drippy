@@ -60,6 +60,9 @@ export async function POST(req: NextRequest) {
       email: parsed.data.email,
       role: parsed.data.role,
       account_status: 'active',
+      // createUser() above already used email_confirm: true — this address
+      // is trusted at creation time, no separate verification step needed.
+      email_verified: true,
     });
     if (profileErr) {
       await admin.auth.admin.deleteUser(authUser.user.id);

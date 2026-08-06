@@ -17,7 +17,7 @@ function Inner() {
     try {
       const res = await fetch('/api/auth/reset-password', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: sp.get('token') ?? '', password }),
+        body: JSON.stringify({ code: sp.get('code') ?? '', password }),
       });
       const json = await res.json();
       if (json.success) { setMsg(t('passwordReset')); setTimeout(() => router.push('/login'), 1500); }

@@ -8,9 +8,8 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) return failValidation(parsed.error);
 
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.verifyOtp({
-    token_hash: parsed.data.token, type: 'email',
-  });
+  // Same PKCE `code` flow as reset-password — see the comment there.
+  const { data, error } = await supabase.auth.exchangeCodeForSession(parsed.data.code);
   if (error || !data.user) return fail('TOKEN_EXPIRED', undefined, 400);
 
   await supabase.from('profiles').update({ email_verified: true })

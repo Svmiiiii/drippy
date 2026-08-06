@@ -1,11 +1,18 @@
 import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { ok, fail, failValidation } from '@/lib/api';
 import { loginSchema } from '@/lib/validation';
+import { checkAuthRateLimit, getRequestIp } from '@/lib/rateLimit';
+
+const MAX_LOGIN_ATTEMPTS = 10;
 
 export async function POST(req: NextRequest) {
   const parsed = loginSchema.safeParse(await req.json());
   if (!parsed.success) return failValidation(parsed.error);
+
+  const allowed = await checkAuthRateLimit(createAdminClient(), 'login', getRequestIp(req), MAX_LOGIN_ATTEMPTS);
+  if (!allowed) return fail('RATE_LIMITED', undefined, 429);
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithPassword(parsed.data);
