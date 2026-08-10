@@ -348,7 +348,7 @@ async function generateWelcomePdf(opts: {
   line('   Ne les partage jamais. Dropix ne te les demandera jamais par email ou téléphone.', 9, fontReg, rgb(1, 0.5, 0.5), 55);
 
   // Footer
-  page.drawText('Powered by Dropix · dropix.dz', { x: 200, y: 30, size: 9, font: fontReg, color: grey });
+  page.drawText('Powered by Dropix · getdropix.com', { x: 200, y: 30, size: 9, font: fontReg, color: grey });
 
   return Buffer.from(await doc.save());
 }

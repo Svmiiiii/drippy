@@ -274,11 +274,10 @@
     "cgv": {
       "title": "CONDITIONS",
       "highlight": "GÉNÉRALES DE VENTE",
-      "disclaimer": "Brouillon générique à faire valider par un professionnel du droit avant mise en ligne. Complète les champs entre crochets et ajuste les délais selon ton fonctionnement réel.",
       "sections": [
         {
           "h": "1. Objet",
-          "p": "Les présentes conditions régissent la vente des produits Dropix (vêtements intégrant un QR code permanent et personnalisable) commandés sur le site dropix.dz, à destination des clients situés en Algérie."
+          "p": "Les présentes conditions régissent la vente des produits Dropix (vêtements intégrant un QR code permanent et personnalisable) commandés sur le site getdropix.com, à destination des clients situés en Algérie."
         },
         {
           "h": "2. Prix",
@@ -306,14 +305,13 @@
         },
         {
           "h": "8. Contact",
-          "p": "Pour toute question relative à une commande : contact@dropix.dz"
+          "p": "Pour toute question relative à une commande : contact@getdropix.com"
         }
       ]
     },
     "retours": {
       "title": "RETOURS &",
       "highlight": "REMBOURSEMENTS",
-      "disclaimer": "Brouillon générique — ajuste les délais (ici 7 jours à titre d'exemple) et fais valider par un professionnel du droit avant mise en ligne.",
       "sections": [
         {
           "h": "Refus à la livraison",
@@ -325,7 +323,7 @@
         },
         {
           "h": "Défaut de fabrication",
-          "p": "En cas de défaut avéré (impression, flocage, QR code non fonctionnel), le client dispose de 7 jours après réception pour contacter Dropix à contact@dropix.dz avec une photo du défaut et son numéro de commande. Après vérification, Dropix propose un remplacement de l'article ou un remboursement."
+          "p": "En cas de défaut avéré (impression, flocage, QR code non fonctionnel), le client dispose de 7 jours après réception pour contacter Dropix à contact@getdropix.com avec une photo du défaut et son numéro de commande. Après vérification, Dropix propose un remplacement de l'article ou un remboursement."
         },
         {
           "h": "Modalités de remboursement",
@@ -333,14 +331,13 @@
         },
         {
           "h": "Contact",
-          "p": "contact@dropix.dz"
+          "p": "contact@getdropix.com"
         }
       ]
     },
     "confidentialite": {
       "title": "POLITIQUE DE",
       "highlight": "CONFIDENTIALITÉ",
-      "disclaimer": "Brouillon générique à faire valider avant mise en ligne, notamment le nom légal de la société et les coordonnées du responsable des données.",
       "sections": [
         {
           "h": "Données collectées",
@@ -352,7 +349,7 @@
         },
         {
           "h": "Partage avec des tiers",
-          "p": "Les données sont hébergées par Supabase (base de données et authentification). Les emails transactionnels (confirmation de commande, réinitialisation de mot de passe) sont envoyés via Resend. Aucune donnée n'est vendue à des tiers."
+          "p": "Aucune donnée n'est vendue à des tiers."
         },
         {
           "h": "Conservation",
@@ -360,7 +357,7 @@
         },
         {
           "h": "Vos droits",
-          "p": "Tu peux consulter et modifier tes informations personnelles depuis ton espace client (Paramètres), ou nous écrire à contact@dropix.dz pour toute demande d'accès, de rectification ou de suppression."
+          "p": "Tu peux consulter et modifier tes informations personnelles depuis ton espace client (Paramètres), ou nous écrire à contact@getdropix.com pour toute demande d'accès, de rectification ou de suppression."
         },
         {
           "h": "Cookies",
@@ -371,19 +368,10 @@
     "mentions": {
       "title": "MENTIONS",
       "highlight": "LÉGALES",
-      "disclaimer": "Brouillon à compléter avant mise en ligne : remplace les champs entre crochets par les informations réelles de la société (raison sociale, RC, NIF, adresse) puis fais valider ce texte par un professionnel du droit algérien.",
       "sections": [
         {
           "h": "Éditeur du site",
-          "p": "Le site Dropix est édité par [Raison sociale / auto-entrepreneur], immatriculé au registre du commerce sous le numéro [N° RC], NIF [N° NIF], dont le siège est situé [adresse complète, wilaya], Algérie. Téléphone : [numéro] — Email : contact@dropix.dz"
-        },
-        {
-          "h": "Directeur de publication",
-          "p": "[Nom du responsable de publication]"
-        },
-        {
-          "h": "Hébergement",
-          "p": "Le site est hébergé par [hébergeur, ex. Vercel Inc.] et les données sont stockées par Supabase (base de données et authentification). Les emails transactionnels sont envoyés via Resend."
+          "p": "Le site Dropix est édité par une entreprise basée en Algérie. Email : contact@getdropix.com"
         },
         {
           "h": "Propriété intellectuelle",
@@ -391,7 +379,7 @@
         },
         {
           "h": "Contact",
-          "p": "Pour toute question : contact@dropix.dz"
+          "p": "Pour toute question : contact@getdropix.com"
         }
       ]
     }

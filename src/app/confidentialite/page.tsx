@@ -8,7 +8,7 @@ export default async function ConfidentialitePage() {
   const t = await getTranslations('legal.confidentialite');
   return (
     <LegalPage
-      title={t('title')} highlight={t('highlight')} disclaimer={t('disclaimer')}
+      title={t('title')} highlight={t('highlight')}
       sections={t.raw('sections')}
     />
   );

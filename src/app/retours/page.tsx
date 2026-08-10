@@ -8,7 +8,7 @@ export default async function RetoursPage() {
   const t = await getTranslations('legal.retours');
   return (
     <LegalPage
-      title={t('title')} highlight={t('highlight')} disclaimer={t('disclaimer')}
+      title={t('title')} highlight={t('highlight')}
       sections={t.raw('sections')}
     />
   );

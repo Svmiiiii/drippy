@@ -8,7 +8,7 @@ export default async function MentionsLegalesPage() {
   const t = await getTranslations('legal.mentions');
   return (
     <LegalPage
-      title={t('title')} highlight={t('highlight')} disclaimer={t('disclaimer')}
+      title={t('title')} highlight={t('highlight')}
       sections={t.raw('sections')}
     />
   );

@@ -274,11 +274,10 @@
     "cgv": {
       "title": "TERMS",
       "highlight": "OF SALE",
-      "disclaimer": "Generic draft to be reviewed by a legal professional before going live. Fill in the bracketed fields and adjust timelines to match your actual operations.",
       "sections": [
         {
           "h": "1. Purpose",
-          "p": "These terms govern the sale of Dropix products (garments with a permanent, customizable QR code) ordered on dropix.dz, for customers located in Algeria."
+          "p": "These terms govern the sale of Dropix products (garments with a permanent, customizable QR code) ordered on getdropix.com, for customers located in Algeria."
         },
         {
           "h": "2. Price",
@@ -306,14 +305,13 @@
         },
         {
           "h": "8. Contact",
-          "p": "For any order-related question: contact@dropix.dz"
+          "p": "For any order-related question: contact@getdropix.com"
         }
       ]
     },
     "retours": {
       "title": "RETURNS &",
       "highlight": "REFUNDS",
-      "disclaimer": "Generic draft — adjust the timelines (7 days shown here as an example) and have it reviewed by a legal professional before going live.",
       "sections": [
         {
           "h": "Refusal at delivery",
@@ -325,7 +323,7 @@
         },
         {
           "h": "Manufacturing defect",
-          "p": "In case of a proven defect (printing, flocking, non-working QR code), the customer has 7 days after receipt to contact Dropix at contact@dropix.dz with a photo of the defect and their order number. After review, Dropix offers a replacement or a refund."
+          "p": "In case of a proven defect (printing, flocking, non-working QR code), the customer has 7 days after receipt to contact Dropix at contact@getdropix.com with a photo of the defect and their order number. After review, Dropix offers a replacement or a refund."
         },
         {
           "h": "Refund terms",
@@ -333,14 +331,13 @@
         },
         {
           "h": "Contact",
-          "p": "contact@dropix.dz"
+          "p": "contact@getdropix.com"
         }
       ]
     },
     "confidentialite": {
       "title": "PRIVACY",
       "highlight": "POLICY",
-      "disclaimer": "Generic draft to be reviewed before going live, especially the company's legal name and data controller contact details.",
       "sections": [
         {
           "h": "Data collected",
@@ -352,7 +349,7 @@
         },
         {
           "h": "Sharing with third parties",
-          "p": "Data is hosted by Supabase (database and authentication). Transactional emails (order confirmation, password reset) are sent via Resend. No data is sold to third parties."
+          "p": "No data is sold to third parties."
         },
         {
           "h": "Retention",
@@ -360,7 +357,7 @@
         },
         {
           "h": "Your rights",
-          "p": "You can view and edit your personal information from your account area (Settings), or write to contact@dropix.dz for any access, correction, or deletion request."
+          "p": "You can view and edit your personal information from your account area (Settings), or write to contact@getdropix.com for any access, correction, or deletion request."
         },
         {
           "h": "Cookies",
@@ -371,19 +368,10 @@
     "mentions": {
       "title": "LEGAL",
       "highlight": "NOTICE",
-      "disclaimer": "Draft to complete before going live: replace the bracketed fields with the company's real information (legal name, business registration number, tax ID, address), then have this text reviewed by an Algerian legal professional.",
       "sections": [
         {
           "h": "Site publisher",
-          "p": "The Dropix site is published by [Legal name / sole proprietor], registered with the trade register under number [RC No.], tax ID [NIF No.], headquartered at [full address, wilaya], Algeria. Phone: [number] — Email: contact@dropix.dz"
-        },
-        {
-          "h": "Publication director",
-          "p": "[Name of publication director]"
-        },
-        {
-          "h": "Hosting",
-          "p": "The site is hosted by [host, e.g. Vercel Inc.] and data is stored by Supabase (database and authentication). Transactional emails are sent via Resend."
+          "p": "The Dropix site is published by a company based in Algeria. Email: contact@getdropix.com"
         },
         {
           "h": "Intellectual property",
@@ -391,7 +379,7 @@
         },
         {
           "h": "Contact",
-          "p": "For any question: contact@dropix.dz"
+          "p": "For any question: contact@getdropix.com"
         }
       ]
     }

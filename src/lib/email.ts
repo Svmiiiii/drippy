@@ -3,7 +3,7 @@ import { formatDZD } from '@/lib/utils';
 import type { Locale } from '@/lib/locale-config';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM = process.env.RESEND_FROM_EMAIL ?? 'Dropix <no-reply@dropix.dz>';
+const FROM = process.env.RESEND_FROM_EMAIL ?? 'Dropix <no-reply@getdropix.com>';
 
 function wrap(lang: Locale, bodyHtml: string): string {
   const rtl = lang === 'ar';

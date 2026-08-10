@@ -23,7 +23,7 @@ const BASE_TEXT_PX = 14;
 // `color` is the customer's own hex pick when `preset === 'CUSTOM'` — see
 // getQrColors in lib/design.ts, the single source of truth for preset↔color
 // resolution shared with the flocked logo preview and server-side printing.
-export function QrCode({ value = 'https://dropix.dz', preset = 'NEON', color, text, textPosition = 'none', font = 'Anton', textColor = '#FFFFFF', textSize = 100, size = 160 }: Props) {
+export function QrCode({ value = 'https://getdropix.com', preset = 'NEON', color, text, textPosition = 'none', font = 'Anton', textColor = '#FFFFFF', textSize = 100, size = 160 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const colors = getQrColors(preset, color);
 

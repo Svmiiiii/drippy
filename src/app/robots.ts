@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dropix.dz';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://getdropix.com';
 
 export default function robots(): MetadataRoute.Robots {
   return {

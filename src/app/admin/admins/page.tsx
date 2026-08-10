@@ -100,7 +100,7 @@ export default function AdminAdminsPage() {
           <div className="grid sm:grid-cols-2 gap-4 mb-4">
             <div>
               <label className="text-xs text-text-secondary mb-1 block">{t('email')} *</label>
-              <input type="email" className="input" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="admin@dropix.dz" />
+              <input type="email" className="input" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="admin@getdropix.com" />
             </div>
             <div>
               <label className="text-xs text-text-secondary mb-1 block">{t('role')}</label>

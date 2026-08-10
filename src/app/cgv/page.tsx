@@ -8,7 +8,7 @@ export default async function CgvPage() {
   const t = await getTranslations('legal.cgv');
   return (
     <LegalPage
-      title={t('title')} highlight={t('highlight')} disclaimer={t('disclaimer')}
+      title={t('title')} highlight={t('highlight')}
       sections={t.raw('sections')}
     />
   );
