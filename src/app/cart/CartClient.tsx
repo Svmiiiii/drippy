@@ -35,8 +35,8 @@ export function CartClient() {
         {items.map((item) => {
           const presetColors = getQrColors(item.preset, item.qrColor);
           return (
-            <div key={item.id} className="flex gap-5 pb-8 border-b border-border">
-              <div className="relative w-24 h-28 shrink-0 bg-[#0E1320] rounded-sm overflow-hidden">
+            <div key={item.id} className="flex gap-3 sm:gap-5 pb-8 border-b border-border">
+              <div className="relative w-20 h-24 sm:w-24 sm:h-28 shrink-0 bg-[#0E1320] rounded-sm overflow-hidden">
                 {item.image?.startsWith('http') && (
                   <Image src={item.image} alt={item.name} fill sizes="96px" className="object-cover" />
                 )}
@@ -64,9 +64,9 @@ export function CartClient() {
                   <button onClick={() => removeItem(item.id)} className="label-luxe text-red-400 hover:text-red-300 transition">{t('remove')}</button>
                 </div>
               </div>
-              <div className="hidden sm:flex flex-col items-center gap-2 shrink-0">
-                <QrCode preset={item.preset} color={item.qrColor} size={56} />
-                {item.logo?.choice && <LogoPreview variant={item.logo.choice} colors={presetColors} size={32} />}
+              <div className="flex flex-col items-center gap-2 shrink-0">
+                <QrCode preset={item.preset} color={item.qrColor} size={44} />
+                {item.logo?.choice && <LogoPreview variant={item.logo.choice} colors={presetColors} size={26} />}
               </div>
             </div>
           );

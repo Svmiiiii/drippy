@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { getAuthProfile } from '@/lib/auth';
 import { logout } from '@/lib/actions';
+import { MobileNav } from '@/components/MobileNav';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { profile } = await getAuthProfile();
@@ -15,10 +16,22 @@ export default async function DashboardLayout({ children }: { children: React.Re
     { href: '/dashboard/orders', label: t('myOrders'), icon: '📦' },
     { href: '/dashboard/stats', label: t('myStats'), icon: '📊' },
     { href: '/dashboard/settings', label: t('settings'), icon: '⚙' },
+    { href: '/shop', label: t('reorder'), icon: '🛒' },
   ];
 
+  const footer = (
+    <>
+      <div className="text-sm"><div className="text-white font-semibold">{profile.first_name ?? t('client')}</div>
+      <div className="text-text-secondary">{profile.dropix_id}</div></div>
+      <form action={logout}>
+        <button className="text-red-400 text-sm mt-2 hover:underline">{t('logout')}</button>
+      </form>
+    </>
+  );
+
   return (
-    <div className="flex min-h-screen">
+    <div className="flex flex-col md:flex-row min-h-screen">
+      <MobileNav links={links} subtitle={t('customerSpace').toUpperCase()} footer={footer} />
       <aside className="w-60 bg-bg border-e border-border p-6 hidden md:flex flex-col fixed h-screen">
         <Link href="/" className="font-heading text-3xl gradient-text">DROPIX</Link>
         <p className="text-xs text-text-secondary mb-8">{t('customerSpace')}</p>
@@ -28,19 +41,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <span>{l.icon}</span> {l.label}
             </Link>
           ))}
-          <Link href="/shop" className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-text-secondary hover:text-white hover:bg-surface-hover transition">
-            <span>🛒</span> {t('reorder')}
-          </Link>
         </nav>
-        <div className="border-t border-border pt-4">
-          <div className="text-sm"><div className="text-white font-semibold">{profile.first_name ?? t('client')}</div>
-          <div className="text-text-secondary">{profile.dropix_id}</div></div>
-          <form action={logout}>
-            <button className="text-red-400 text-sm mt-2 hover:underline">{t('logout')}</button>
-          </form>
-        </div>
+        <div className="border-t border-border pt-4">{footer}</div>
       </aside>
-      <main className="flex-1 md:ms-60 p-8">{children}</main>
+      <main className="flex-1 md:ms-60 p-4 sm:p-8">{children}</main>
     </div>
   );
 }

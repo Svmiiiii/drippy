@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { getAuthProfile } from '@/lib/auth';
 import { logout } from '@/lib/actions';
+import { MobileNav } from '@/components/MobileNav';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const { profile, supabase } = await getAuthProfile();
@@ -26,8 +27,20 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     ...(profile.role === 'super_admin' ? [{ href: '/admin/admins', label: t('admins'), icon: '🔑' }] : []),
   ];
 
+  const footer = (
+    <>
+      <div className="text-sm">
+        <div className="text-white font-semibold">{profile.first_name ?? t('admin')}</div>
+        <div className="text-text-secondary text-xs">{profile.email}</div>
+        <div className="text-primary text-xs mt-0.5">{profile.role === 'super_admin' ? t('superAdminRole') : t('adminRole')}</div>
+      </div>
+      <form action={logout}><button className="text-red-400 text-sm mt-2 hover:underline">{t('logout')}</button></form>
+    </>
+  );
+
   return (
-    <div className="flex min-h-screen">
+    <div className="flex flex-col md:flex-row min-h-screen">
+      <MobileNav links={links} subtitle={t('admin').toUpperCase()} footer={footer} />
       <aside className="w-60 bg-bg border-e border-border p-6 hidden md:flex flex-col fixed h-screen">
         <Link href="/" className="font-heading text-3xl gradient-text">DROPIX</Link>
         <p className="text-[11px] text-primary mb-8 font-semibold tracking-wide">{t('admin').toUpperCase()}</p>
@@ -43,16 +56,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </Link>
           ))}
         </nav>
-        <div className="border-t border-border pt-4">
-          <div className="text-sm">
-            <div className="text-white font-semibold">{profile.first_name ?? t('admin')}</div>
-            <div className="text-text-secondary text-xs">{profile.email}</div>
-            <div className="text-primary text-xs mt-0.5">{profile.role === 'super_admin' ? t('superAdminRole') : t('adminRole')}</div>
-          </div>
-          <form action={logout}><button className="text-red-400 text-sm mt-2 hover:underline">{t('logout')}</button></form>
-        </div>
+        <div className="border-t border-border pt-4">{footer}</div>
       </aside>
-      <main className="flex-1 md:ms-60 p-8">{children}</main>
+      <main className="flex-1 md:ms-60 p-4 sm:p-8">{children}</main>
     </div>
   );
 }
