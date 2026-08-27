@@ -73,9 +73,10 @@ export default async function HomePage() {
       {/* HOW IT WORKS */}
       <section className="py-20 bg-[#0E1320]">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="font-heading text-center mb-16" style={{ fontSize: 'clamp(36px,6vw,56px)' }}>
+          <h2 className="font-heading text-center mb-4" style={{ fontSize: 'clamp(36px,6vw,56px)' }}>
             {t('home.howItWorks')}
           </h2>
+          <p className="text-text-secondary text-center max-w-xl mx-auto mb-16">{t('home.howItWorksSubtitle')}</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {steps.map((x) => (
               <div key={x.s} className="card text-center">
