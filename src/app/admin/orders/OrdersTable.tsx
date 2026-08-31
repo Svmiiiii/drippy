@@ -275,9 +275,9 @@ export function OrdersTable({ orders }: { orders: any[] }) {
               </div>
             ) : (
               <div className="mb-5">
-                <div className="grid grid-cols-2 gap-3 text-sm mb-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm mb-2">
                   {[[t('client'), sel.customer_name], [t('phone'), sel.customer_phone], [t('email'), sel.customer_email], [t('wilaya'), sel.wilaya_code], [t('commune'), sel.commune], [t('address'), sel.address]].map(([l, v]) => (
-                    <div key={l}><div className="text-text-secondary text-xs">{l}</div><div className="font-medium">{v}</div></div>
+                    <div key={l} className="min-w-0"><div className="text-text-secondary text-xs">{l}</div><div className="font-medium break-words">{v}</div></div>
                   ))}
                 </div>
                 {CONTACT_LOCKED_STATUSES.includes(sel.status) ? (
